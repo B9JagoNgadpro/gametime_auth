@@ -11,6 +11,6 @@ ENV JDBC_DATABASE_USERNAME ${JDBC_DATABASE_USERNAME}
 
 WORKDIR /app
 RUN ls -al
-COPY ./*.jar /app
+COPY ./gametime_auth-0.0.1-SNAPSHOT.jar /app
 EXPOSE 8080
 CMD ["java","-jar","gametime_auth-0.0.1-SNAPSHOT.jar"]
