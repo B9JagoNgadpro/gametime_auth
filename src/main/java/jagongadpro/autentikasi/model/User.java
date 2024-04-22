@@ -13,22 +13,23 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
-@Getter
 @Table(name = "users")
 public class User implements UserDetails {
+    @Getter
     @Id
     String email;
 
     String username;
 
+    @Getter
     String password;
-
+    @Getter
     String profileUrl;
-
+    @Getter
     Integer saldo;
-
+    @Getter
     String bio;
-
+    @Getter
     String status = "PEMBELI";
 
     public User(Builder builder){
@@ -44,6 +45,13 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
+    }
+
+
+    //buat jwt aja yaaa
+    @Override
+    public String getUsername() {
+        return email;
     }
 
     @Override
@@ -64,6 +72,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public String getUsernameReal() {
+        return username;
     }
 
     public static class Builder{

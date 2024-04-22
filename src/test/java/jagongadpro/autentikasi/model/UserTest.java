@@ -11,7 +11,7 @@ public class UserTest {
     }
     @Test
     void getterUsename() {
-        assertEquals("username", user.getUsername());
+        assertEquals("username", user.getUsernameReal());
     }
     @Test
     void getterBio() {
