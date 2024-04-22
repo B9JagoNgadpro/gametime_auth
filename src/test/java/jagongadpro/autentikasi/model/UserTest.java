@@ -41,6 +41,15 @@ public class UserTest {
         assertEquals("PENJUAL", user.getStatus());
 
     }
+    @Test
+    void implementUserDetail() {
+        User user = new User.Builder().status("PENJUAL").build();
+        assertEquals(true, user.isAccountNonExpired());
+        assertEquals(true, user.isAccountNonLocked());
+        assertEquals(true, user.isCredentialsNonExpired());
+        assertEquals(true, user.isEnabled());
+
+    }
 
 
 
