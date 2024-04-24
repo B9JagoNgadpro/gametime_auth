@@ -51,6 +51,31 @@ public class UserTest {
 
     }
 
+    void setBioTest(){
+        user.setBio("baru");
+        assertEquals(user.getBio(), "baru");
+    }
+    void setPasswordTest(){
+        user.setPassword("pwbaru");
+        assertEquals(user.getBio(), "pwbaru");
+    }
+    void setStatusTest(){
+        user.setStatus("PEMBELI");
+        assertEquals(user.getBio(), "PEMBELI");
+    }
+    void setSaldoTest(){
+        user.setSaldo(40000);
+        assertEquals(user.getSaldo(), 40000);
+    }
+    void setUserNameTest(){
+        user.setUsername("usernamebaru");
+        assertEquals(user.getUsername(), "usernamebaru");
+    }
+    void setPasswordUrlTest(){
+        user.setProfileUrl("urlbaru");
+        assertEquals(user.getPassword(), "urlbaru");
+    }
+
 
 
 
