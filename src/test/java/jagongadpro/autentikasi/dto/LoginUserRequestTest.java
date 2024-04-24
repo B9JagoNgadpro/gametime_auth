@@ -11,6 +11,31 @@ import static org.junit.jupiter.api.Assertions.*;
 class LoginUserRequestTest {
     @Autowired
     ValidationService validationService;
+    LoginUserRequest loginUserRequest = new LoginUserRequest("abc@gmail.com", "password");
+
+    @Test
+    void getterEmail(){
+        assertEquals("abc@gmail.com", loginUserRequest.getEmail());
+
+    }
+    @Test
+    void getterPassword(){
+        assertEquals("password", loginUserRequest.getPassword());
+
+    }
+
+    @Test
+    void setterEmail(){
+        loginUserRequest.setEmail("new@gmail.com");
+        assertEquals("new@gmail.com", loginUserRequest.getEmail());
+
+    }
+    @Test
+    void setterPassword(){
+        loginUserRequest.setPassword("passwordnew");
+        assertEquals("passwordnew", loginUserRequest.getPassword());
+
+    }
     @Test
     void LoginUserRequestSuccess(){
         LoginUserRequest user = new LoginUserRequest("abc@gmail.com", "password");
