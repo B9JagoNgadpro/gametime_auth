@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -19,16 +20,26 @@ public class User implements UserDetails {
     @Id
     String email;
 
+    @Setter
     String username;
 
     @Getter
+    @Setter
     String password;
+
     @Getter
+    @Setter
     String profileUrl;
+
     @Getter
+    @Setter
     Integer saldo;
+
     @Getter
+    @Setter
     String bio;
+
+    @Setter
     @Getter
     String status = "PEMBELI";
 
