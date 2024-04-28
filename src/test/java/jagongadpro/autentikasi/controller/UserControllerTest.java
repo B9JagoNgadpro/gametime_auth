@@ -1,28 +1,26 @@
 package jagongadpro.autentikasi.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jagongadpro.autentikasi.dto.WebResponse;
 import jagongadpro.autentikasi.model.User;
+import jagongadpro.autentikasi.service.PasswordResetTokenServiceImpl;
 import jagongadpro.autentikasi.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mail.MailSender;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.util.Locale;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -38,6 +36,9 @@ public class UserControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private PasswordResetTokenServiceImpl passwordResetTokenService;
 
     @InjectMocks
     private UserController userController;
@@ -76,6 +77,30 @@ public class UserControllerTest {
 
                     assertEquals(response.getErrors(), "Email tidak ditemukan" );
                 });
+
+    }
+
+    @Test
+    public void testTokenValid() throws  Exception{
+        when(passwordResetTokenService.validatePasswordResetToken("token")).thenReturn("valid") ;
+        mockMvc.perform(get("/user/changePassword").param("token", "token"))
+                .andExpect(status().isOk())
+                .andDo(result ->{
+                    String response = result.getResponse().getContentAsString();
+                    assertEquals(response, "valid");
+                } );
+
+    }
+
+    @Test
+    public void testTokenInValid() throws  Exception{
+        when(passwordResetTokenService.validatePasswordResetToken("token")).thenReturn("invalid") ;
+        mockMvc.perform(get("/user/changePassword").param("token", "token"))
+                .andExpect(status().isNotFound())
+                .andDo(result ->{
+                    String response = result.getResponse().getContentAsString();
+                    assertEquals(response, "invalid");
+                } );
 
     }
 }
