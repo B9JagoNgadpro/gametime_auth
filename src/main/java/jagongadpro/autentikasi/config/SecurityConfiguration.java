@@ -38,6 +38,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**")
                 .permitAll()
+                .requestMatchers("/user/resetPassword")
+                .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
