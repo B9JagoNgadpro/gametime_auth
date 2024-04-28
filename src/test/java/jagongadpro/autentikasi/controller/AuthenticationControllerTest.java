@@ -2,11 +2,13 @@ package jagongadpro.autentikasi.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
 import jagongadpro.autentikasi.dto.LoginResponse;
 import jagongadpro.autentikasi.dto.LoginUserRequest;
 import jagongadpro.autentikasi.dto.WebResponse;
 import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.repository.UserRepository;
+import jagongadpro.autentikasi.service.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,8 @@ class AuthenticationControllerTest {
     PasswordEncoder passwordEncoder;
     @Autowired
     UserRepository userRepository;
-
+    @Autowired
+    JwtService jwtService;
     @Autowired
     ObjectMapper objectMapper;
     //test sukses
@@ -49,6 +52,8 @@ class AuthenticationControllerTest {
                     WebResponse<LoginResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<WebResponse<LoginResponse>>() {
                     });
                     assertNotNull(response.getData().getToken());
+                    String role = jwtService.extractRole(response.getData().getToken());
+                    assertEquals(role, "PEMBELI");
                     assertNotNull(response.getData().getExpiredIn());
                     assertNull(response.getErrors());
                 });
