@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+
 @RestController
 //@RequestMapping("api/auth/")
 public class AuthenticationController {
@@ -33,8 +35,9 @@ public class AuthenticationController {
         validationService.validate(request);
         //bisa ada eror bad doncern bla"gitu dah
         User authenticatedUser = authenticationService.authenticate(request);
-
-        String jwtToken = jwtService.generateToken(authenticatedUser);
+        HashMap<String,Object> setClaims = new HashMap<>();
+        setClaims.put("role", authenticatedUser.getStatus());
+        String jwtToken = jwtService.generateToken(setClaims, authenticatedUser);
 
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(jwtToken);
