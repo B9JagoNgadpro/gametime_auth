@@ -50,30 +50,35 @@ public class UserTest {
         assertEquals(true, user.isEnabled());
 
     }
-
+    @Test
     void setBioTest(){
         user.setBio("baru");
         assertEquals(user.getBio(), "baru");
     }
+    @Test
     void setPasswordTest(){
         user.setPassword("pwbaru");
-        assertEquals(user.getBio(), "pwbaru");
+        assertEquals(user.getPassword(), "pwbaru");
     }
+    @Test
     void setStatusTest(){
         user.setStatus("PEMBELI");
-        assertEquals(user.getBio(), "PEMBELI");
+        assertEquals(user.getStatus(), "PEMBELI");
     }
+    @Test
     void setSaldoTest(){
         user.setSaldo(40000);
         assertEquals(user.getSaldo(), 40000);
     }
+    @Test
     void setUserNameTest(){
         user.setUsername("usernamebaru");
-        assertEquals(user.getUsername(), "usernamebaru");
+        assertEquals(user.getUsernameReal(), "usernamebaru");
     }
+    @Test
     void setPasswordUrlTest(){
         user.setProfileUrl("urlbaru");
-        assertEquals(user.getPassword(), "urlbaru");
+        assertEquals(user.getProfileUrl(), "urlbaru");
     }
 
 
