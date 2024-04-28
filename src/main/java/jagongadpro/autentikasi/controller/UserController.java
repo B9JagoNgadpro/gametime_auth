@@ -4,11 +4,14 @@ import jagongadpro.autentikasi.dto.WebResponse;
 import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.model.UserNotFoundException;
 import jagongadpro.autentikasi.service.EmailServiceImpl;
+import jagongadpro.autentikasi.service.PasswordResetTokenServiceImpl;
 import jagongadpro.autentikasi.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +28,9 @@ public class UserController {
 
     @Autowired
     EmailServiceImpl emailService;
+
+    @Autowired
+    PasswordResetTokenServiceImpl passwordResetToken;
 
     @PostMapping(value = "/user/resetPassword", produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<String> resetPassword(HttpServletRequest request,
@@ -45,6 +51,17 @@ public class UserController {
         int serverPort = request.getServerPort();
         String contextPath = request.getContextPath();
         return scheme + "://" + serverName + ":" + serverPort + contextPath;
+    }
+    @GetMapping("/user/changePassword")
+    public ResponseEntity<String> showChangePasswordPage(@RequestParam("token") String token) {
+        String result = passwordResetToken.validatePasswordResetToken(token);
+        if(result.equals("invalid")) {
+            //nanti return redirect ke login page karna ga valid
+            return new ResponseEntity<>("invalid", HttpStatus.NOT_FOUND);
+            //valid nanti return ke halaman forget pw
+        } else {
+            return ResponseEntity.ok().body("valid");
+        }
     }
 
 }

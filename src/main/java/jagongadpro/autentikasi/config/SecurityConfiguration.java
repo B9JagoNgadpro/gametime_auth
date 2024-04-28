@@ -38,7 +38,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**")
                 .permitAll()
-                .requestMatchers("/user/resetPassword")
+                .requestMatchers("/user/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

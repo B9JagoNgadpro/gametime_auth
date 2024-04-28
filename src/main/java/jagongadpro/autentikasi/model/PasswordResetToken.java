@@ -32,8 +32,9 @@ public class PasswordResetToken {
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
+    @Setter
     @Getter
-    private final Date expiryDate =  calculateExpiryDate(EXPIRATION);
+    private Date expiryDate =  calculateExpiryDate(EXPIRATION);
     ;
 
     public PasswordResetToken(String token, User user){
