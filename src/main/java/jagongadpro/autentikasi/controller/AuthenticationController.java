@@ -37,6 +37,7 @@ public class AuthenticationController {
         User authenticatedUser = authenticationService.authenticate(request);
         HashMap<String,Object> setClaims = new HashMap<>();
         setClaims.put("role", authenticatedUser.getStatus());
+        setClaims.put("saldo",authenticatedUser.getSaldo());
         String jwtToken = jwtService.generateToken(setClaims, authenticatedUser);
 
         LoginResponse loginResponse = new LoginResponse();
