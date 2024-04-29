@@ -44,7 +44,7 @@ class AuthenticationControllerTest {
 
     @Test
     void LoginSuccess() throws  Exception {
-        User user = new User.Builder().email("abc@gmail.com").password(passwordEncoder.encode("password")).build();
+        User user = new User.Builder().email("abc@gmail.com").password(passwordEncoder.encode("password")).saldo(90000).build();
         userRepository.save(user);
         LoginUserRequest request = new LoginUserRequest("abc@gmail.com", "password");
         mockMvc.perform(post("/api/auth/login").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andExpectAll(status().isOk())
@@ -53,6 +53,8 @@ class AuthenticationControllerTest {
                     });
                     assertNotNull(response.getData().getToken());
                     String role = jwtService.extractRole(response.getData().getToken());
+                    Integer saldo = jwtService.extractSaldo(response.getData().getToken());
+                    assertEquals(saldo, 90000);
                     assertEquals(role, "PEMBELI");
                     assertNotNull(response.getData().getExpiredIn());
                     assertNull(response.getErrors());
