@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PasswordResetTokenServiceImplTest {
@@ -27,7 +27,7 @@ class PasswordResetTokenServiceImplTest {
 
 
     @Test
-    void testPasswordResetTokenValid(){
+    void testPasswordResetTokenValid() {
         User user = new User();
         PasswordResetToken passwordResetToken = new PasswordResetToken("token", user);
         when(passwordResetTokenRepository.findByToken("token")).thenReturn(Optional.of(passwordResetToken));
@@ -35,18 +35,20 @@ class PasswordResetTokenServiceImplTest {
         assertEquals(result, "valid");
 
     }
+
     @Test
-    void testPasswordResetTokenNotFound(){
-        String token="token";
+    void testPasswordResetTokenNotFound() {
+        String token = "token";
         when(passwordResetTokenRepository.findByToken(token)).thenReturn(Optional.empty());
         String result = passwordResetTokenService.validatePasswordResetToken(token);
         assertEquals(result, "invalid");
 
     }
+
     @Test
-    void testPasswordResetTokenExpired(){
+    void testPasswordResetTokenExpired() {
         User user = new User();
-        String token="token";
+        String token = "token";
 
         PasswordResetToken passwordResetToken = new PasswordResetToken(token, user);
         Calendar cal = Calendar.getInstance();
@@ -57,5 +59,15 @@ class PasswordResetTokenServiceImplTest {
         String result = passwordResetTokenService.validatePasswordResetToken(token);
         assertEquals(result, "invalid");
 
+    }
+
+    @Test
+    void getUserByPasswordResetTokenTest() {
+        User user = new User();
+        user.setUsername("abc");
+        PasswordResetToken passwordResetToken = new PasswordResetToken("token", user);
+        when(passwordResetTokenRepository.findByToken("token")).thenReturn(Optional.of(passwordResetToken));
+        User getUser = passwordResetTokenService.getUserByPasswordResetToken("token");
+        assertEquals(getUser.getUsernameReal(), "abc");
     }
 }

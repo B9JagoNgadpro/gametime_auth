@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -19,6 +20,8 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
+    @Mock
+    PasswordEncoder passwordEncoder;
     @InjectMocks
     UserServiceImpl userService;
     @Mock
@@ -48,6 +51,16 @@ class UserServiceImplTest {
     void savePasswordResetTokenSuccees(){
         userService.createPasswordResetTokenForUser( new User(),"token");
         verify(passwordResetTokenRepository,times(1)).save(any(PasswordResetToken.class));
+
+    }
+    @Test
+    void changeUserPasswordTest(){
+        User user = new User();
+        when(passwordEncoder.encode("newPassword")).thenReturn("encode");
+        userService.changeUserPassword(user, "newPassword");
+        verify(userRepository,times(1)).save(any(User.class));
+        assertNotNull(user.getPassword());
+        assertEquals(user.getPassword(), "encode");
 
     }
 }
