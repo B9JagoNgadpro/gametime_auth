@@ -9,6 +9,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
 public class ErrorController {
@@ -28,6 +29,11 @@ public class ErrorController {
     public ResponseEntity<WebResponse<String>> UsernameNotFoundException(UserNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(WebResponse.<String>builder().errors(exception.getMessage()).build());
+    }
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<WebResponse<String>> ResponseStatusException(ResponseStatusException exception) {
+        return ResponseEntity.status(exception.getStatusCode())
+                .body(WebResponse.<String>builder().errors(exception.getReason()).build());
     }
 }
 
