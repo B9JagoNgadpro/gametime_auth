@@ -1,5 +1,6 @@
 package jagongadpro.autentikasi.model;
 
+import jagongadpro.autentikasi.enums.Status;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -32,18 +33,18 @@ public class UserTest {
     }
     @Test
     void getterStatusDefault() {
-        assertEquals("PEMBELI", user.getStatus());
+        assertEquals(Status.ROLE_PEMBELI, user.getStatus());
 
     }
     @Test
     void getterStatusUpdated() {
-        User user = new User.Builder().status("PENJUAL").build();
-        assertEquals("PENJUAL", user.getStatus());
+        User user = new User.Builder().status(Status.ROLE_PENJUAL).build();
+        assertEquals(Status.ROLE_PENJUAL, user.getStatus());
 
     }
     @Test
     void implementUserDetail() {
-        User user = new User.Builder().status("PENJUAL").build();
+        User user = new User.Builder().username("abc").build();
         assertEquals(true, user.isAccountNonExpired());
         assertEquals(true, user.isAccountNonLocked());
         assertEquals(true, user.isCredentialsNonExpired());
@@ -62,8 +63,8 @@ public class UserTest {
     }
     @Test
     void setStatusTest(){
-        user.setStatus("PEMBELI");
-        assertEquals(user.getStatus(), "PEMBELI");
+        user.setStatus(Status.ROLE_PEMBELI);
+            assertEquals(user.getStatus(), Status.ROLE_PEMBELI);
     }
     @Test
     void setSaldoTest(){

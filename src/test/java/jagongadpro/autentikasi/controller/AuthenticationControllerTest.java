@@ -6,6 +6,7 @@ import io.jsonwebtoken.Claims;
 import jagongadpro.autentikasi.dto.LoginResponse;
 import jagongadpro.autentikasi.dto.LoginUserRequest;
 import jagongadpro.autentikasi.dto.WebResponse;
+import jagongadpro.autentikasi.enums.Status;
 import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.repository.UserRepository;
 import jagongadpro.autentikasi.service.JwtService;
@@ -55,7 +56,7 @@ class AuthenticationControllerTest {
                     String role = jwtService.extractRole(response.getData().getToken());
                     Integer saldo = jwtService.extractSaldo(response.getData().getToken());
                     assertEquals(saldo, 90000);
-                    assertEquals(role, "PEMBELI");
+                    assertEquals(role, Status.ROLE_PEMBELI.name());
                     assertNotNull(response.getData().getExpiredIn());
                     assertNull(response.getErrors());
                 });
