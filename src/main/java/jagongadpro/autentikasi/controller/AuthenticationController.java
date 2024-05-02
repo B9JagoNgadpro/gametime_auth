@@ -11,12 +11,13 @@ import jagongadpro.autentikasi.service.ValidationService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
 @RestController
-//@RequestMapping("api/auth/")
+@RequestMapping("/api/auth/")
 public class AuthenticationController {
     @Autowired
     JwtService jwtService;
@@ -29,7 +30,7 @@ public class AuthenticationController {
     @Autowired
     EmailServiceImpl emailService;
 
-    @PostMapping(value = "/api/auth/login", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "login", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<LoginResponse> login(@RequestBody LoginUserRequest request){
           //contraint violation exception
         validationService.validate(request);
@@ -39,7 +40,7 @@ public class AuthenticationController {
         setClaims.put("role", authenticatedUser.getStatus());
         setClaims.put("saldo",authenticatedUser.getSaldo());
         String jwtToken = jwtService.generateToken(setClaims, authenticatedUser);
-
+        System.out.println("ini token ========= "+jwtToken);
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(jwtToken);
         loginResponse.setExpiredIn(jwtService.getExpirationTime());

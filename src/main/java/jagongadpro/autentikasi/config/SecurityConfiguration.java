@@ -1,5 +1,6 @@
 package jagongadpro.autentikasi.config;
 
+import jagongadpro.autentikasi.enums.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +39,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**")
                 .permitAll()
+                .requestMatchers("/api/games/create").hasAnyAuthority("ROLE_PENJUAL")
+                .requestMatchers("api/games/get**").permitAll()
                 .requestMatchers("/user/**")
                 .permitAll()
                 .anyRequest()
@@ -57,7 +60,6 @@ public class SecurityConfiguration {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(List.of("http://localhost:8080"));
-        configuration.setAllowedMethods(List.of("GET","POST"));
         configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -66,4 +68,6 @@ public class SecurityConfiguration {
 
         return source;
     }
+
+
 }
