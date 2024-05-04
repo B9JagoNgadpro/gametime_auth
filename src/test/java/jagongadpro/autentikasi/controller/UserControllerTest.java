@@ -31,6 +31,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -185,10 +187,43 @@ public class UserControllerTest {
 
                 });
     }
-
+    @Test
     public void testGetUserNotLoggedIn() throws Exception{
         mockMvc.perform(get("/user/me").contentType(MediaType.APPLICATION_JSON)).andExpect(status().is4xxClientError());
 
     }
+    @Test
+    @WithMockUser(username = "testuser", authorities = {"ROLE_PEMBELI"})
+    public void testUpdateUserBalance() throws Exception{
+        Map<String,Integer> request = new HashMap<>();
+        request.put("saldo", 20000);
+        mockMvc.perform(patch("/user/reduceBalance").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andExpect(status().isOk())
+                .andDo(result -> {
+                    WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>(){});
+                    assertEquals(response.getData(),"Ok");
+                    assertNull(response.getErrors());
+                });
+
+    }
+    @Test
+    public void testSetUserBalanceNotLoggedIn() throws Exception{
+        mockMvc.perform(patch("/user/reduceBalance").contentType(MediaType.APPLICATION_JSON)).andExpect(status().is4xxClientError());
+
+    }
+
+    @Test
+    @WithMockUser(username = "testuser", authorities = {"ROLE_PEMBELI"})
+    public void testSetUserBalanceNotValid() throws Exception{
+        Map<String,Integer> request = new HashMap<>();
+        request.put("saldo", -1);
+        mockMvc.perform(patch("/user/reduceBalance").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andExpect(status().isBadRequest())
+                .andDo(result -> {
+                    WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>(){});
+                    assertNull(response.getData());
+                    assertNotNull(response.getErrors());
+                    assertEquals(response.getErrors(), "Saldo tidak valid");
+                });
+    }
+
 
 }
