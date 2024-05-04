@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -56,6 +57,17 @@ public class UserController {
         User currentUser = userService.findByEmail(user.getUsername());
         UserResponse userResponse = UserResponse.builder().username(currentUser.getUsernameReal()).email(currentUser.getEmail()).saldo(currentUser.getSaldo()).status(currentUser.getStatus()).build();
         return WebResponse.<UserResponse>builder().data(userResponse).build();
+    }
+
+    @PatchMapping(value = "/user/reduceBalance"  )
+    public WebResponse<String> setUserBalance(@RequestBody Map<String, Integer> request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails user = (UserDetails) authentication.getPrincipal();
+        if (request.get("saldo")<0){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Saldo tidak valid");
+        }
+        userService.reduceBalance(user.getUsername(), request.get("saldo"));
+        return WebResponse.<String>builder().data("Ok").build();
     }
 
 }
