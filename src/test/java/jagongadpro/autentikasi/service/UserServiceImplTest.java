@@ -2,8 +2,10 @@ package jagongadpro.autentikasi.service;
 
 import jagongadpro.autentikasi.model.PasswordResetToken;
 import jagongadpro.autentikasi.model.User;
+import jagongadpro.autentikasi.model.UserNotFoundException;
 import jagongadpro.autentikasi.repository.PasswordResetTokenRepository;
 import jagongadpro.autentikasi.repository.UserRepository;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -63,4 +65,20 @@ class UserServiceImplTest {
         assertEquals(user.getPassword(), "encode");
 
     }
+    @Test
+    void reduceBalanceSuccess(){
+        String email = "abc@gmail.com";
+        User user = new User.Builder().email(email).saldo(10000).build();
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        userService.reduceBalance(email, 20000);
+        verify(userRepository, times(1)).findByEmail(email);
+        verify(userRepository, times(1)).save(user);
+        assertEquals(user.getSaldo(),20000);
+    }
+    @Test
+    void reduceBalanceFailed(){
+        assertThrows(UserNotFoundException.class,()-> userService.reduceBalance("email", 2000) );
+
+    }
+
 }
