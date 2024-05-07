@@ -2,11 +2,14 @@ package jagongadpro.autentikasi.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
 import jagongadpro.autentikasi.dto.LoginResponse;
 import jagongadpro.autentikasi.dto.LoginUserRequest;
 import jagongadpro.autentikasi.dto.WebResponse;
+import jagongadpro.autentikasi.enums.Status;
 import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.repository.UserRepository;
+import jagongadpro.autentikasi.service.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +33,8 @@ class AuthenticationControllerTest {
     PasswordEncoder passwordEncoder;
     @Autowired
     UserRepository userRepository;
-
+    @Autowired
+    JwtService jwtService;
     @Autowired
     ObjectMapper objectMapper;
     //test sukses
@@ -41,7 +45,7 @@ class AuthenticationControllerTest {
 
     @Test
     void LoginSuccess() throws  Exception {
-        User user = new User.Builder().email("abc@gmail.com").password(passwordEncoder.encode("password")).build();
+        User user = new User.Builder().email("abc@gmail.com").password(passwordEncoder.encode("password")).saldo(90000).build();
         userRepository.save(user);
         LoginUserRequest request = new LoginUserRequest("abc@gmail.com", "password");
         mockMvc.perform(post("/api/auth/login").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andExpectAll(status().isOk())
@@ -49,6 +53,10 @@ class AuthenticationControllerTest {
                     WebResponse<LoginResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<WebResponse<LoginResponse>>() {
                     });
                     assertNotNull(response.getData().getToken());
+                    String role = jwtService.extractRole(response.getData().getToken());
+                    Integer saldo = jwtService.extractSaldo(response.getData().getToken());
+                    assertEquals(saldo, 90000);
+                    assertEquals(role, Status.ROLE_PEMBELI.name());
                     assertNotNull(response.getData().getExpiredIn());
                     assertNull(response.getErrors());
                 });

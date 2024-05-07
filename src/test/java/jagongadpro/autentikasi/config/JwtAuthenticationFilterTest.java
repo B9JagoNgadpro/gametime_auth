@@ -150,4 +150,10 @@ public class JwtAuthenticationFilterTest {
         verify(request, times(1)).getHeader("Authorization");
 
     }
+    @Test
+    public void headerAuthhorizationNotFounf() throws Exception {
+        jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
+
+
+    }
 }

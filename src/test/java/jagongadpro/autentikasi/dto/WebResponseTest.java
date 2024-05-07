@@ -44,5 +44,11 @@ class WebResponseTest {
         assertEquals(response.getData(),"OK");
         assertEquals(response.getErrors(), "error");
     }
+    @Test
+    void testToString(){
+        assertNotNull(WebResponse.<String>builder().data("Oke").errors("error").toString());
+
+    }
+
 
 }
