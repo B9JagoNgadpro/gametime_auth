@@ -8,6 +8,7 @@ import jagongadpro.autentikasi.dto.WebResponse;
 import jagongadpro.autentikasi.enums.Status;
 import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.service.PasswordResetTokenServiceImpl;
+import jagongadpro.autentikasi.service.UserFacade;
 import jagongadpro.autentikasi.service.UserService;
 import jagongadpro.autentikasi.service.ValidationService;
 import jakarta.validation.ConstraintViolationException;
@@ -42,7 +43,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
-
+    @InjectMocks
+    UserFacade userFacade;
     @Autowired
     private MockMvc mockMvc;
 
