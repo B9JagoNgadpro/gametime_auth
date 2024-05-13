@@ -14,6 +14,9 @@ import jagongadpro.autentikasi.service.EmailServiceImpl;
 import jagongadpro.autentikasi.service.JwtService;
 import jagongadpro.autentikasi.service.ValidationService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,9 +28,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,6 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 class AuthenticationControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
     @InjectMocks
@@ -48,9 +55,6 @@ class AuthenticationControllerTest {
     JwtService jwtService;
     @MockBean
     AuthenticationService authenticationService;
-
-    @MockBean
-    ValidationService validationService;
 
     @MockBean
     EmailServiceImpl emailService;
@@ -74,32 +78,32 @@ class AuthenticationControllerTest {
                 });
     }
 
-//    @Test
-//    void LoginFailedRequestNotValid() throws  Exception {
-//        User user = new User.Builder().email("abc@gmail.com").password("password").build();
-//        userRepository.save(user);
-//        LoginUserRequest request = new LoginUserRequest("abc@gmail.com", "");
-//        mockMvc.perform(post("/api/auth/login").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andExpectAll(status().isBadRequest())
-//                .andDo(result -> {
-//                    WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<WebResponse<String>>() {
-//                    });
-//                    assertNotNull(response.getErrors());
-//                    assertNull(response.getData());
-//                });
-//    }
+    @Test
+    void LoginFailedBadCredentials() throws  Exception {
+        User user = new User.Builder().email("abc@gmail.com").password("password").saldo(90000).build();
+        LoginUserRequest request = new LoginUserRequest("abc@gmail.com", "password");
+        when(authenticationService.authenticate(any(LoginUserRequest.class))).thenThrow(new BadCredentialsException("Email atau password salah"));
+        mockMvc.perform(post("/api/auth/login").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
+                .andExpectAll(status().isUnauthorized())
+                .andDo(result -> {
+                    WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<WebResponse<String>>() {
+                    });
+                    assertNotNull(response.getErrors());
+                    assertEquals(response.getErrors(),"Email atau password salah");
+                });
+    }
 
-//    @Test
-//    void LoginFailedNotBadCredentials() throws  Exception {
-//        User user = new User.Builder().email("abc@gmail.com").password(passwordEncoder.encode("password")).build();
-//        userRepository.save(user);
-//        LoginUserRequest request = new LoginUserRequest("abc@gmail.com", "salah");
-//        mockMvc.perform(post("/api/auth/login").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andExpectAll(status().isUnauthorized())
-//                .andDo(result -> {
-//                    WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<WebResponse<String>>() {
-//                    });
-//                    assertNotNull(response.getErrors());
-//                    assertNull(response.getData());
-//                    assertEquals(response.getErrors(), "Email atau password salah");
-//                });
-//    }
+    @Test
+    void LoginFailedInputNotValid() throws  Exception {
+        User user = new User.Builder().email("abc@gmail.com").password("password").saldo(90000).build();
+        LoginUserRequest request = new LoginUserRequest("abc@gmail.com","");
+        mockMvc.perform(post("/api/auth/login").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
+                .andExpectAll(status().isBadRequest())
+                .andDo(result -> {
+                    WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<WebResponse<String>>() {
+                    });
+                    assertNotNull(response.getErrors());
+
+                });
+    }
 }
