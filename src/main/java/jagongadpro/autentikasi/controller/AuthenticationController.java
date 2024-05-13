@@ -36,10 +36,8 @@ public class AuthenticationController {
         validationService.validate(request);
         //bisa ada eror bad doncern bla"gitu dah
         User authenticatedUser = authenticationService.authenticate(request);
-        HashMap<String,Object> setClaims = new HashMap<>();
-        setClaims.put("role", authenticatedUser.getStatus());
-        setClaims.put("saldo",authenticatedUser.getSaldo());
-        String jwtToken = jwtService.generateToken(setClaims, authenticatedUser);
+
+        String jwtToken = jwtService.generateToken(authenticatedUser);
         System.out.println("ini token ========= "+jwtToken);
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(jwtToken);
