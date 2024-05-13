@@ -36,9 +36,7 @@ public class AuthenticationController {
         validationService.validate(request);
         //bisa ada eror bad doncern bla"gitu dah
         User authenticatedUser = authenticationService.authenticate(request);
-
         String jwtToken = jwtService.generateToken(authenticatedUser);
-        System.out.println("ini token ========= "+jwtToken);
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(jwtToken);
         loginResponse.setExpiredIn(jwtService.getExpirationTime());

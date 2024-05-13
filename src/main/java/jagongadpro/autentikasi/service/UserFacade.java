@@ -61,7 +61,7 @@ public class UserFacade {
         validationService.validate(passwordDto);
         String result = passwordResetTokenService.validatePasswordResetToken(passwordDto.getToken());
 
-        if(result != null) {
+        if(result.equals("invalid")) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "token tidak valid");
         }
         User user = passwordResetTokenService.getUserByPasswordResetToken(passwordDto.getToken());
