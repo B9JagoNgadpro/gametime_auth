@@ -49,5 +49,31 @@ public class AutentikasiApplication {
 	public RouterFunction<ServerResponse> getGameById() {
 		return route("/api/games/{id}").GET("/api/games/{id}", http("http://localhost:9090")).build();
 	}
+	
+	@Bean
+	public RouterFunction<ServerResponse> getCart() {
+		return route("/api/cart/view/{email}").GET("/api/cart/view/{email}", http("http://35.213.132.17/api/cart/view/{email}")).build();
+	}
+
+	@Bean
+	public RouterFunction<ServerResponse> addToCart() {
+		return route("/api/cart/add").GET("/api/cart/add", http("http://35.213.132.17/api/cart/add")).build();
+	}
+
+	@Bean
+	public RouterFunction<ServerResponse> removeFromCart() {
+		return route("/api/cart/remove").GET("/api/cart/remove", http("http://35.213.132.17/api/cart/remove")).build();
+	}
+
+
+	@Bean
+	public RouterFunction<ServerResponse> updateItemCart() {
+		return route("/api/cart/update").GET("/api/cart/update", http("http://35.213.132.17/api/cart/update")).build();
+	}
+
+	@Bean
+	public RouterFunction<ServerResponse> clearCart() {
+		return route("/api/cart/clear/{email}").GET("/api/cart/clear/{email}", http("http://35.213.132.17/api/cart/clear/{email}")).build();
+	}
 
 }
