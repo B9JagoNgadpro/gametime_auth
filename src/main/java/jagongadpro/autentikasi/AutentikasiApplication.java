@@ -43,11 +43,15 @@ public class AutentikasiApplication {
 	}
 	@Bean
 	public RouterFunction<ServerResponse> filterGames() {
-		return route("/api/games/get").GET("/api/games/get", http("http://localhost:9090")).build();
+		return route("/api/games/filter").GET("/api/games/filter", http("http://34.87.89.120:8080/api/games/filter")).build();
 	}
 	@Bean
 	public RouterFunction<ServerResponse> getGameById() {
-		return route("/api/games/{id}").GET("/api/games/{id}", http("http://localhost:9090")).build();
+		return route("/api/games/{id}").GET("/api/games/{id}", http("http://34.87.89.120:8080/api/games/{id}")).build();
 	}
 
+	@Bean
+	public RouterFunction<ServerResponse> searchGames() {
+		return route().GET("/api/games/search", http("http://34.87.89.120:8080/api/games/search")).build();
+	}
 }
