@@ -71,7 +71,7 @@ tasks.jacocoTestReport {
 
 sonarqube {
 	properties {
-		property "sonar.projectKey", "B9JagoNgadpro_Autentikasi"
+		property "sonar.projectKey", "B9JagoNgadpro_gametime_auth"
 		property "sonar.organization", "b9jagongadpro"
 		property "sonar.java.binaries", "."
 		property "sonar.gradle.skipCompile", "true"

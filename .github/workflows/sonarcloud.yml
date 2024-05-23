@@ -2,9 +2,11 @@ name: SonarCloud analysis
 
 on:
   push:
-    branches: [ "*" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "*" ]
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -47,4 +49,4 @@ jobs:
       - name: Run SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar -Dsonar.projectKey=B9JagoNgadpro_Autentikasi -Dsonar.organization=b9jagongadpro -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/test/jacocoTestReport.xml
+        run: ./gradlew sonar -Dsonar.projectKey=B9JagoNgadpro_gametime_auth -Dsonar.organization=b9jagongadpro -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/test/jacocoTestReport.xml
