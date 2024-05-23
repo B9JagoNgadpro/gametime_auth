@@ -19,7 +19,6 @@ import static org.springframework.cloud.gateway.server.mvc.handler.HandlerFuncti
 
 @EnableConfigurationProperties
 @SpringBootApplication()
-@CrossOrigin(origins = "*")
 public class AutentikasiApplication {
 
 	public static void main(String[] args) {
