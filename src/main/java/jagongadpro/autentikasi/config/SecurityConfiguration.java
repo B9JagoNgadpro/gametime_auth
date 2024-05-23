@@ -2,6 +2,7 @@ package jagongadpro.autentikasi.config;
 
 import jagongadpro.autentikasi.enums.Status;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -17,6 +18,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
+@EnableConfigurationProperties
 @EnableWebSecurity
 public class SecurityConfiguration {
     @Autowired

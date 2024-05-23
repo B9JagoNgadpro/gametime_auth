@@ -1,6 +1,7 @@
 package jagongadpro.autentikasi.config;
 
 import jagongadpro.autentikasi.repository.UserRepository;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.Properties;
 
 @Configuration
+@EnableConfigurationProperties
 public class ApplicationConfiguration {
     private final UserRepository userRepository;
 
