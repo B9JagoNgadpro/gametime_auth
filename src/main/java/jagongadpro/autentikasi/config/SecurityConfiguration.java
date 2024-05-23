@@ -37,8 +37,7 @@ public class SecurityConfiguration {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**")
-                .permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/games/create").hasAnyAuthority("ROLE_PENJUAL")
                 .requestMatchers("/api/games/get**").permitAll()
                 .requestMatchers("/user/password/**").permitAll()
@@ -57,6 +56,7 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
