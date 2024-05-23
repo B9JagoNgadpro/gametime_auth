@@ -45,6 +45,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/games/search").permitAll()
                 .requestMatchers("/api/games/filter").permitAll()
                 .requestMatchers("/api/games/{id}").permitAll()
+                .requestMatchers("/api/user/changeRole**").hasAnyAuthority("ROLE_PEMBELI", "ROLE_PENJUAL")
                 .anyRequest()
                 .authenticated()
                 .and()
