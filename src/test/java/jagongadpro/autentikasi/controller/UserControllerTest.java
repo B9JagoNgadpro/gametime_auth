@@ -37,7 +37,10 @@ import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import org.springframework.security.test.context.support.WithMockUser;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
@@ -49,10 +52,8 @@ public class UserControllerTest {
     @MockBean
     private UserService userService;
 
-
     @MockBean
     private PasswordResetTokenServiceImpl passwordResetTokenService;
-
 
     @Autowired
     ObjectMapper objectMapper;
@@ -76,7 +77,6 @@ public class UserControllerTest {
                     });
                     assertEquals(response.getData(), "url sent" );
                 });
-
     }
 
     @Test
@@ -91,7 +91,6 @@ public class UserControllerTest {
 
                     assertEquals(response.getErrors(), "Email tidak ditemukan" );
                 });
-
     }
 
     @Test
@@ -103,7 +102,6 @@ public class UserControllerTest {
                     String response = result.getResponse().getContentAsString();
                     assertEquals(response, "valid");
                 } );
-
     }
 
     @Test
@@ -115,7 +113,6 @@ public class UserControllerTest {
                     String response = result.getResponse().getContentAsString();
                     assertEquals(response, "invalid");
                 } );
-
     }
 
     @Test
@@ -158,6 +155,7 @@ public class UserControllerTest {
                     assertEquals(response.getErrors(), "token tidak valid");
                 });
     }
+
     @Test
     public void savePasswordUserNotFound() throws Exception{
         User user = new User();
@@ -172,6 +170,7 @@ public class UserControllerTest {
                     assertEquals(response.getErrors(), "user tidak ditemukan");
                 });
     }
+
     @Test
     @WithMockUser(username = "testuser", authorities = {"ROLE_PEMBELI"})
     public void testGetUserLoggedIn() throws Exception{
@@ -184,14 +183,14 @@ public class UserControllerTest {
                     assertNull(response.getErrors());
                     assertEquals(response.getData().getEmail(),"testuser");
                     assertEquals(response.getData().getStatus(), Status.ROLE_PEMBELI);
-
                 });
     }
+
     @Test
     public void testGetUserNotLoggedIn() throws Exception{
         mockMvc.perform(get("/user/me").contentType(MediaType.APPLICATION_JSON)).andExpect(status().is4xxClientError());
-
     }
+
     @Test
     @WithMockUser(username = "testuser", authorities = {"ROLE_PEMBELI"})
     public void testUpdateUserBalance() throws Exception{
@@ -203,12 +202,11 @@ public class UserControllerTest {
                     assertEquals(response.getData(),"Ok");
                     assertNull(response.getErrors());
                 });
-
     }
+
     @Test
     public void testSetUserBalanceNotLoggedIn() throws Exception{
         mockMvc.perform(patch("/user/reduceBalance").contentType(MediaType.APPLICATION_JSON)).andExpect(status().is4xxClientError());
-
     }
 
     @Test
@@ -225,5 +223,22 @@ public class UserControllerTest {
                 });
     }
 
+    @Test
+    @WithMockUser(username = "user1@example.com", authorities = {"ROLE_PEMBELI"})
+    public void testChangeUserRole() throws Exception {
+        String newRole = "ROLE_PENJUAL";
 
+        mockMvc.perform(post("/api/user/changeRole")
+                        .param("newRole", newRole)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(result -> {
+                    WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<WebResponse<String>>() {
+                    });
+                    assertEquals("Role updated successfully", response.getData());
+                    assertNull(response.getErrors());
+                });
+
+        verify(userService, times(1)).changeUserRole("user1@example.com", Status.valueOf(newRole));
+    }
 }
