@@ -5,6 +5,7 @@ import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.model.UserNotFoundException;
 import jagongadpro.autentikasi.repository.PasswordResetTokenRepository;
 import jagongadpro.autentikasi.repository.UserRepository;
+import jagongadpro.autentikasi.enums.Status;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,10 +16,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -39,9 +40,8 @@ class UserServiceImplTest {
         User userGet = userService.findByEmail(email);
         assertNotNull(userGet);
         assertEquals(userGet.getEmail(), user.getEmail());
-
-
     }
+
     @Test
     void userFindByEmailNotFound(){
         String email = "abc@gmail.com";
@@ -53,8 +53,8 @@ class UserServiceImplTest {
     void savePasswordResetTokenSuccees(){
         userService.createPasswordResetTokenForUser( new User(),"token");
         verify(passwordResetTokenRepository,times(1)).save(any(PasswordResetToken.class));
-
     }
+
     @Test
     void changeUserPasswordTest(){
         User user = new User();
@@ -63,8 +63,8 @@ class UserServiceImplTest {
         verify(userRepository,times(1)).save(any(User.class));
         assertNotNull(user.getPassword());
         assertEquals(user.getPassword(), "encode");
-
     }
+
     @Test
     void reduceBalanceSuccess(){
         String email = "abc@gmail.com";
@@ -75,10 +75,37 @@ class UserServiceImplTest {
         verify(userRepository, times(1)).save(user);
         assertEquals(user.getSaldo(),20000);
     }
+
     @Test
     void reduceBalanceFailed(){
         assertThrows(UserNotFoundException.class,()-> userService.reduceBalance("email", 2000) );
-
     }
 
+    @Test
+    void changeUserRoleSuccessfully() {
+        String email = "user@example.com";
+        User user = new User.Builder().email(email).username("username").bio("bio").password("password").profileUrl("url").saldo(500000).status(Status.ROLE_PEMBELI).build();
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+        userService.changeUserRole(email, Status.ROLE_PENJUAL);
+        assertEquals(Status.ROLE_PENJUAL, user.getStatus());
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    void changeUserRoleToSameRoleThrowsException() {
+        String email = "user@example.com";
+        User user = new User.Builder().email(email).username("username").bio("bio").password("password").profileUrl("url").saldo(500000).status(Status.ROLE_PENJUAL).build();
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+        assertThrows(IllegalStateException.class, () -> userService.changeUserRole(email, Status.ROLE_PENJUAL));
+    }
+
+    @Test
+    void changeUserRoleUserNotFoundThrowsException() {
+        String email = "nonexistent@example.com";
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> userService.changeUserRole(email, Status.ROLE_PENJUAL));
+    }
 }
