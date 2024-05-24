@@ -49,6 +49,20 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/games/create").hasAnyAuthority("ROLE_PENJUAL")
                 .requestMatchers("/api/games/get**").permitAll()
+
+                .requestMatchers("/ulasan/create").hasAnyAuthority("ROLE_PEMBELI")
+                .requestMatchers("/ulasan/{idUlasan}").hasAnyAuthority("ROLE_PEMBELI")
+                .requestMatchers("/ulasan/user/{idUser}").hasAnyAuthority("ROLE_PEMBELI")
+                .requestMatchers("/ulasan/game/{idGame}").hasAnyAuthority("ROLE_PEMBELI")
+                .requestMatchers("/ulasan/edit/{idUlasan}").hasAnyAuthority("ROLE_PEMBELI")
+                .requestMatchers("/ulasan/delete/{idUlasan}").hasAnyAuthority("ROLE_PEMBELI")
+
+                .requestMatchers("/penilaian-produk/create").hasAnyAuthority("ROLE_PENJUAL")
+                .requestMatchers("/penilaian-produk/{idTanggapan}").hasAnyAuthority("ROLE_PENJUAL")
+                .requestMatchers("/penilaian-produk/user/{idPenjual}").hasAnyAuthority("ROLE_PENJUAL")
+                .requestMatchers("/penilaian-produk/edit/{idTanggapan}").hasAnyAuthority("ROLE_PENJUAL")
+                .requestMatchers("/penilaian-produk/delete/{idTanggapan}").hasAnyAuthority("ROLE_PENJUAL")
+
                 .requestMatchers("/user/password/**").permitAll()
 <<<<<<< HEAD
                 .requestMatchers("/api/cart/**").hasAnyAuthority("ROLE_PEMBELI")
