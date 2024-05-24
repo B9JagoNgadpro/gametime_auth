@@ -23,6 +23,10 @@ public class AutentikasiApplication {
 	@Value("${app.game}")
 	String game;
 
+	String cart;
+	String filter;
+
+
 	public static void main(String[] args) {
 		SpringApplication.run(AutentikasiApplication.class, args);
 	}
@@ -36,32 +40,11 @@ public class AutentikasiApplication {
 	}
 	@Bean
 	public RouterFunction<ServerResponse> filterGames() {
-		return route("/api/games/get").GET("/api/games/get", http(game)).build();
+		return route("/api/games/get").GET("/api/games/get", http("http://localhost:9090")).build();
 	}
 	@Bean
 	public RouterFunction<ServerResponse> getGameById() {
-		return route("/api/games/{id}").GET("/api/games/{id}", http(game)).build();
-	}
-	
-	@Bean
-	public RouterFunction<ServerResponse> getCart() {
-		return route("/api/cart/view/{email}").GET("/api/cart/view/{email}", http("http://35.213.132.17/api/cart/view/{email}")).build();
-	}
-
-	@Bean
-	public RouterFunction<ServerResponse> addToCart() {
-		return route("/api/cart/add").GET("/api/cart/add", http("http://35.213.132.17/api/cart/add")).build();
-	}
-
-	@Bean
-	public RouterFunction<ServerResponse> removeFromCart() {
-		return route("/api/cart/remove").GET("/api/cart/remove", http("http://35.213.132.17/api/cart/remove")).build();
-	}
-
-
-	@Bean
-	public RouterFunction<ServerResponse> updateItemCart() {
-		return route("/api/cart/update").GET("/api/cart/update", http("http://35.213.132.17/api/cart/update")).build();
+		return route("/api/games/{id}").GET("/api/games/{id}", http("http://localhost:9090")).build();
 	}
 
 	@Bean
@@ -70,4 +53,17 @@ public class AutentikasiApplication {
 	}
 
 
+	@Bean
+	public RouterFunction<ServerResponse> searchGames() {
+		return route().GET("/api/games/search", http("http://34.87.89.120:8080/api/games/search")).build();
+	}
+
+	@Bean
+	public RouterFunction<ServerResponse> filterGamesWahyu() {
+		return route("/api/games/filter").GET("/api/games/filter", http("http://34.87.89.120:8080/api/games/filter")).build();
+	}
+	@Bean
+	public RouterFunction<ServerResponse> getGameByIdWahyu() {
+		return route("/api/games/{id}").GET("/api/games/{id}", http("http://34.87.89.120:8080/api/games/{id}")).build();
+	}
 }

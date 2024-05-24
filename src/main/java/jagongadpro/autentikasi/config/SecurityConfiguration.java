@@ -50,7 +50,13 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/games/create").hasAnyAuthority("ROLE_PENJUAL")
                 .requestMatchers("/api/games/get**").permitAll()
                 .requestMatchers("/user/password/**").permitAll()
+<<<<<<< HEAD
                 .requestMatchers("/api/cart/**").hasAnyAuthority("ROLE_PEMBELI")
+=======
+                .requestMatchers("/api/games/search").permitAll()
+                .requestMatchers("/api/games/filter").permitAll()
+                .requestMatchers("/api/games/{id}").permitAll()
+>>>>>>> 6a1e7d53b0c3470c12e3b17ad932aa3f1465aefd
                 .anyRequest()
                 .authenticated()
                 .and()
