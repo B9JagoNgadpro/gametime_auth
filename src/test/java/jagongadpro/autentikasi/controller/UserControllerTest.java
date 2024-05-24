@@ -8,14 +8,12 @@ import jagongadpro.autentikasi.dto.WebResponse;
 import jagongadpro.autentikasi.enums.Status;
 import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.model.UserNotFoundException;
-import jagongadpro.autentikasi.service.PasswordResetTokenServiceImpl;
+
 import jagongadpro.autentikasi.service.UserFacade;
 import jagongadpro.autentikasi.service.UserService;
-import jagongadpro.autentikasi.service.ValidationService;
+
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.ValidationException;
-import org.apache.coyote.Response;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,12 +25,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.junit.jupiter.api.Assertions.*;

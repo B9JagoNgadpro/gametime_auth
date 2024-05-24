@@ -2,22 +2,16 @@ package jagongadpro.autentikasi.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
+
 import jagongadpro.autentikasi.dto.LoginResponse;
 import jagongadpro.autentikasi.dto.LoginUserRequest;
 import jagongadpro.autentikasi.dto.WebResponse;
-import jagongadpro.autentikasi.enums.Status;
+
 import jagongadpro.autentikasi.model.User;
-import jagongadpro.autentikasi.repository.UserRepository;
+
 import jagongadpro.autentikasi.service.AuthenticationService;
 import jagongadpro.autentikasi.service.EmailServiceImpl;
 import jagongadpro.autentikasi.service.JwtService;
-import jagongadpro.autentikasi.service.ValidationService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,15 +23,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

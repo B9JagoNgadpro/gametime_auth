@@ -1,26 +1,22 @@
 package jagongadpro.autentikasi.config;
 
-import static org.junit.jupiter.api.Assertions.*;
 import jagongadpro.autentikasi.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import static org.mockito.Mockito.*;
 
@@ -42,8 +38,7 @@ public class JwtAuthenticationFilterTest {
     @Mock
     private UserDetailsService userDetailsService;
 
-    @Mock
-    private HandlerExceptionResolver handlerExceptionResolver;
+
 
     @InjectMocks
     private JwtAuthenticationFilter jwtAuthenticationFilter;
