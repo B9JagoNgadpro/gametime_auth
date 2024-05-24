@@ -13,7 +13,7 @@ public class EmailServiceImpl{
     @Autowired
     private JavaMailSender emailSender;
     public void  constructResetTokenEmail(String contextPath, String token, User user) {
-        String url = contextPath + "/user/changePassword?token=" + token;
+        String url = contextPath + "/user/password/changePassword?token=" + token;
         emailSender.send(constructEmail("Reset Password", "This is your url \n" + url, user));
     }
 

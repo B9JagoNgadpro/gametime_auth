@@ -6,6 +6,7 @@ import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.model.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -53,7 +54,9 @@ public class UserFacade {
             return new ResponseEntity<>("invalid", HttpStatus.NOT_FOUND);
             //valid nanti return ke halaman forget pw
         } else {
-            return ResponseEntity.ok().body("valid");
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Location", "http://localhost:3000/changePassword?token="+token);
+            return new ResponseEntity<>(headers, HttpStatus.FOUND);
         }
     }
 
