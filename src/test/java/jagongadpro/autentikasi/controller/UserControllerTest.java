@@ -9,6 +9,7 @@ import jagongadpro.autentikasi.enums.Status;
 import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.model.UserNotFoundException;
 
+import jagongadpro.autentikasi.service.PasswordResetTokenServiceImpl;
 import jagongadpro.autentikasi.service.UserFacade;
 import jagongadpro.autentikasi.service.UserService;
 
@@ -65,7 +66,8 @@ public class UserControllerTest {
 
     @MockBean
     UserDetailsService userDetailsService;
-    private PasswordResetTokenServiceImpl passwordResetTokenService;
+    @MockBean
+    PasswordResetTokenServiceImpl passwordResetTokenService;
 
     @Autowired
     ObjectMapper objectMapper;
