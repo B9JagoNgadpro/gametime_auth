@@ -7,6 +7,7 @@ import jagongadpro.autentikasi.model.PasswordResetToken;
 import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.model.UserNotFoundException;
 import jagongadpro.autentikasi.service.*;
+import jagongadpro.autentikasi.enums.Status;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.ResponseEntity;
@@ -41,15 +43,16 @@ public class UserController {
         return userFacade.resetPassword(request, userEmail);
     }
 
-
     @GetMapping("/user/password/changePassword")
     public ResponseEntity<String> showChangePasswordPage(@RequestParam("token") String token) {
         return userFacade.showChangePasswordPage(token);
     }
+
     @PostMapping(value = "/user/password/savePassword", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<String> savePassword(@RequestBody PasswordDto passwordDto) {
         return userFacade.savePassword(passwordDto);
     }
+
     @GetMapping("/user/me")
     public WebResponse<UserResponse> getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -70,4 +73,11 @@ public class UserController {
         return WebResponse.<String>builder().data("Ok").build();
     }
 
+    @PostMapping("/api/user/changeRole")
+    public ResponseEntity<WebResponse<String>> changeUserRole(@AuthenticationPrincipal UserDetails currentUser,
+                                                              @RequestParam("newRole") String newRole) {
+        String email = currentUser.getUsername();
+        userService.changeUserRole(email, Status.valueOf(newRole));
+        return ResponseEntity.ok(WebResponse.<String>builder().data("Role updated successfully").build());
+    }
 }

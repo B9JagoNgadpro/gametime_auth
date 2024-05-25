@@ -62,6 +62,7 @@ public class ApplicationConfiguration {
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "false");
+        props.put("mail.smtp.checkserveridentity", "true");
         props.put("mail.smtp.quitwait", "false");
         props.put("mail.debug", "true");
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");

@@ -3,6 +3,7 @@ package jagongadpro.autentikasi.service;
 import jagongadpro.autentikasi.model.PasswordResetToken;
 import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.model.UserNotFoundException;
+import jagongadpro.autentikasi.enums.Status;
 import jagongadpro.autentikasi.repository.PasswordResetTokenRepository;
 import jagongadpro.autentikasi.repository.UserRepository;
 
@@ -17,7 +18,6 @@ public class UserServiceImpl implements UserService{
     UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
-
     @Autowired
     PasswordResetTokenRepository passwordResetTokenRepository;
 
@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService{
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
     }
+
     @Transactional
     public void createPasswordResetTokenForUser(User user, String token) {
         PasswordResetToken myToken = new PasswordResetToken(token, user);
@@ -44,6 +45,17 @@ public class UserServiceImpl implements UserService{
     public void reduceBalance(String email,  Integer newBalance) {
         User user =userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("User tidak ditemukan"));
         user.setSaldo(newBalance);
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void changeUserRole(String email, Status newRole) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
+        if (user.getStatus().equals(newRole)) {
+            throw new IllegalStateException("Tidak dapat mengganti ke role yang sama.");
+        }
+        user.setStatus(newRole);
         userRepository.save(user);
     }
 }
