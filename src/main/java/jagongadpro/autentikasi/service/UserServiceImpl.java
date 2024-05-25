@@ -8,6 +8,7 @@ import jagongadpro.autentikasi.repository.PasswordResetTokenRepository;
 import jagongadpro.autentikasi.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     PasswordResetTokenRepository passwordResetTokenRepository;
 
+    @Autowired
+    PasswordResetTokenServiceImpl passwordResetTokenService;
+
     @Override
     @Transactional
     public User findByEmail(String email) {
@@ -37,6 +42,16 @@ public class UserServiceImpl implements UserService{
 
     @Transactional
     public void createPasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByUser(user).orElse(null);
+        if(passwordResetToken!=null ){
+            if (passwordResetTokenService.validatePasswordResetToken(token)=="valid"){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url already sent, please check your email");
+            }
+            else{
+                passwordResetTokenRepository.deleteByToken(token);
+            }
+
+        }
         PasswordResetToken myToken = new PasswordResetToken(token, user);
         passwordResetTokenRepository.save(myToken);
     }
