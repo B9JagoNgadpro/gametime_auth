@@ -52,6 +52,11 @@ public class AutentikasiApplication {
 	public RouterFunction<ServerResponse> displayPembelian() {
 		return route("/api/transaksi/display/{email}").GET("/api/transaksi/display/{email}", http(game)).build();
 	}
+
+	@Bean
+	public RouterFunction<ServerResponse> createTransaksi() {
+		return route("/api/transaksi/{email}").POST("/api/transaksi/{email}", http(game)).build();
+	}
 	@Bean
 	public RouterFunction<ServerResponse> getGameById() {
 		return route("/api/games/{id}").GET("/api/games/{id}", http(game)).build();
