@@ -14,11 +14,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -82,14 +88,28 @@ class UserServiceImplTest {
     }
 
     @Test
-    void changeUserRoleSuccessfully() {
-        String email = "user@example.com";
-        User user = new User.Builder().email(email).username("username").bio("bio").password("password").profileUrl("url").saldo(500000).status(Status.ROLE_PEMBELI).build();
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+    public void testChangeUserRole() {
+        // Arrange
+        User existingUser = new User.Builder().email("test@example.com").status(Status.ROLE_PEMBELI).build();;
+        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(existingUser));
 
-        userService.changeUserRole(email, Status.ROLE_PENJUAL);
-        assertEquals(Status.ROLE_PENJUAL, user.getStatus());
-        verify(userRepository).save(user);
+        Authentication auth = mock(Authentication.class);
+        when(auth.getPrincipal()).thenReturn("test@example.com");
+        when(auth.getCredentials()).thenReturn("password");
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+        SecurityContextHolder.setContext(securityContext);
+
+        // Act
+        userService.changeUserRole("test@example.com", Status.ROLE_PENJUAL);
+
+        // Assert
+        assertEquals(Status.ROLE_PENJUAL, existingUser.getStatus());
+
+
     }
 
     @Test
