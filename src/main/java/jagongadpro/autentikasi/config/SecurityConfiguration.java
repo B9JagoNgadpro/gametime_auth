@@ -49,7 +49,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/games/create").hasAnyAuthority("ROLE_PENJUAL")
                 .requestMatchers("/api/games/get**").permitAll()
-                .requestMatchers("/api/transaksi/**").hasAnyAuthority("ROLE_PENJUAL")
+                .requestMatchers("/api/transaksi/display/**").hasAnyAuthority("ROLE_PEMBELI")
 
                 .requestMatchers("/ulasan/create").hasAnyAuthority("ROLE_PEMBELI")
                 .requestMatchers("/ulasan/{idUlasan}").hasAnyAuthority("ROLE_PEMBELI")
