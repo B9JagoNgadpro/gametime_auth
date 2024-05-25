@@ -19,6 +19,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -37,6 +38,8 @@ class UserServiceImplTest {
     UserRepository userRepository;
     @Mock
     PasswordResetTokenRepository passwordResetTokenRepository;
+    @Mock
+    PasswordResetTokenServiceImpl passwordResetTokenService;
 
     @Test
     void userFindByEmailFound(){
@@ -59,6 +62,29 @@ class UserServiceImplTest {
     void savePasswordResetTokenSuccees(){
         userService.createPasswordResetTokenForUser( new User(),"token");
         verify(passwordResetTokenRepository,times(1)).save(any(PasswordResetToken.class));
+    }
+
+    @Test
+    void saveNewPasswordResetTokenInvalid(){
+        User user = new User.Builder().email("email").build();
+        PasswordResetToken passwordResetToken = new PasswordResetToken("token", user);
+
+        when(passwordResetTokenRepository.findByUser(user)).thenReturn(Optional.of(passwordResetToken));
+        when(passwordResetTokenService.validatePasswordResetToken("token")).thenReturn("invalid");
+        userService.createPasswordResetTokenForUser(user, "token");
+
+        verify(passwordResetTokenRepository, times(1)).save(any(PasswordResetToken.class));
+    }
+
+    @Test
+    void failedSaveNewPasswordResetToken(){
+        User user = new User.Builder().email("email").build();
+        PasswordResetToken passwordResetToken = new PasswordResetToken("token", user);
+
+        when(passwordResetTokenRepository.findByUser(user)).thenReturn(Optional.of(passwordResetToken));
+        when(passwordResetTokenService.validatePasswordResetToken("token")).thenReturn("valid");
+        assertThrows(ResponseStatusException.class, ()-> userService.createPasswordResetTokenForUser(user,"token"));
+
     }
 
     @Test
