@@ -22,10 +22,6 @@ class AuthenticationServiceTest {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @BeforeEach
-    void setUp(){
-        userRepository.deleteAll();
-    }
 
     @Test
     void AuthenticateSuccess(){
@@ -34,6 +30,7 @@ class AuthenticationServiceTest {
         LoginUserRequest request = new LoginUserRequest("hai@gmail.com", "password");
         User login = authenticationService.authenticate(request);
         assertEquals(login.getEmail(), user.getEmail() );
+        userRepository.deleteById("hai@gmail.com");
     }
 
     @Test
@@ -44,6 +41,7 @@ class AuthenticationServiceTest {
         assertThrows(BadCredentialsException.class, () -> {
             authenticationService.authenticate(request);
         });
+        userRepository.deleteById("hai@gmail.com");
     }
 
     @Test
@@ -54,5 +52,6 @@ class AuthenticationServiceTest {
         assertThrows(BadCredentialsException.class, () -> {
             authenticationService.authenticate(request);
         });
+        userRepository.deleteById("hai@gmail.com");
     }
 }
