@@ -6,8 +6,10 @@ import jagongadpro.autentikasi.dto.RegisterUserRequest;
 import jagongadpro.autentikasi.dto.WebResponse;
 import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.service.AuthenticationService;
+import jagongadpro.autentikasi.service.EmailServiceImpl;
 import jagongadpro.autentikasi.service.JwtService;
 import jagongadpro.autentikasi.service.ValidationService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +17,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 
 @RestController
-//@RequestMapping("api/auth/")
+@RequestMapping("/api/auth/")
 public class AuthenticationController {
     @Autowired
     JwtService jwtService;
@@ -27,15 +32,16 @@ public class AuthenticationController {
     @Autowired
     ValidationService validationService;
 
-    @PostMapping(value = "/api/auth/login", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Autowired
+    EmailServiceImpl emailService;
+
+    @PostMapping(value = "login", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<LoginResponse> login(@RequestBody LoginUserRequest request){
-        //contraint violation exception
+          //contraint violation exception
         validationService.validate(request);
         //bisa ada eror bad doncern bla"gitu dah
         User authenticatedUser = authenticationService.authenticate(request);
-
         String jwtToken = jwtService.generateToken(authenticatedUser);
-
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(jwtToken);
         loginResponse.setExpiredIn(jwtService.getExpirationTime());

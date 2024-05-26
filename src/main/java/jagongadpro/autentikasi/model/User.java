@@ -1,5 +1,6 @@
 package jagongadpro.autentikasi.model;
 
+import jagongadpro.autentikasi.enums.Status;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -7,7 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Collection;
 import java.util.List;
@@ -42,7 +46,7 @@ public class User implements UserDetails {
 
     @Setter
     @Getter
-    String status = "PEMBELI";
+    Status status = Status.ROLE_PEMBELI;
 
     public User(Builder builder){
         this.email = builder.email;
@@ -56,7 +60,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return  List.of(new SimpleGrantedAuthority(status.name()));
     }
 
 
@@ -90,6 +94,8 @@ public class User implements UserDetails {
         return username;
     }
 
+
+
     public static class Builder{
         String email;
 
@@ -99,7 +105,7 @@ public class User implements UserDetails {
         String profileUrl;
         Integer saldo;
         String bio;
-        String status="PEMBELI";
+        Status status = Status.ROLE_PEMBELI;
 
         public Builder email(String email){
             this.email = email;
@@ -117,7 +123,7 @@ public class User implements UserDetails {
             this.profileUrl = profileUrl;
             return this;
         }
-        public Builder status(String status){
+        public Builder status(Status status){
             this.status = status;
             return this;
         }
@@ -130,8 +136,8 @@ public class User implements UserDetails {
             return this;
         }
         public User build() {
-            User user=  new User(this);
-            return user;
+            return  new User(this);
+
         }
 
 

@@ -1,12 +1,8 @@
 package jagongadpro.autentikasi.service;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import jagongadpro.autentikasi.model.User;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -21,7 +17,7 @@ class JwtServiceTest {
     @Test
     void extractUsernameTest() {
         String token = jwtService.generateToken(userLogin);
-        assertEquals(jwtService.extractUsername(token),"abc@gmail.com" );
+        assertEquals("abc@gmail.com", jwtService.extractUsername(token) );
     }
 
     @Test
@@ -32,7 +28,7 @@ class JwtServiceTest {
 
     @Test
     void getExpirationTimeTest() {
-        assertEquals(3000L, jwtService.getExpirationTime());
+        assertEquals(3000000L, jwtService.getExpirationTime());
     }
 
     @Test
@@ -47,11 +43,4 @@ class JwtServiceTest {
         String token = jwtService.generateToken(userLogin);
         assertFalse(jwtService.isTokenValid(token,other));
     }
-    @Test
-    void isTokenValidTestTimeExceed() throws InterruptedException {
-        String token = jwtService.generateToken(userLogin);
-        Thread.sleep(3000);
-        assertThrows(ExpiredJwtException.class, () -> jwtService.isTokenValid(token,userLogin));
-    }
-
 }

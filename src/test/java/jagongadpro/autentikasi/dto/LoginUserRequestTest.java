@@ -40,8 +40,8 @@ class LoginUserRequestTest {
     void LoginUserRequestSuccess(){
         LoginUserRequest user = new LoginUserRequest("abc@gmail.com", "password");
         validationService.validate(user);
-        assertEquals(user.getEmail(),"abc@gmail.com" );
-        assertEquals(user.getPassword(), "password");
+        assertEquals("abc@gmail.com", user.getEmail() );
+        assertEquals("password" , user.getPassword());
     }
 
     @Test
