@@ -77,4 +77,33 @@ public class UserController {
         userService.changeUserRole(email, Status.valueOf(newRole));
         return ResponseEntity.ok(WebResponse.<String>builder().data("Role updated successfully").build());
     }
+
+    @PatchMapping(value = "/user/updateProfileUrl", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public WebResponse<String> updateProfileUrl(@RequestBody Map<String, String> request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails user = (UserDetails) authentication.getPrincipal();
+        String profileUrl = request.get("profileUrl");
+
+        if (profileUrl == null || profileUrl.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Profile URL tidak boleh kosong");
+        }
+
+        userService.updateProfileUrl(user.getUsername(), profileUrl);
+        return WebResponse.<String>builder().data("Profile URL updated successfully").build();
+    }
+
+    @PatchMapping(value = "/user/updateBio", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public WebResponse<String> updateBio(@RequestBody Map<String, String> request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails user = (UserDetails) authentication.getPrincipal();
+        String bio = request.get("bio");
+
+        if (bio == null || bio.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bio tidak boleh kosong");
+        }
+
+        userService.updateBio(user.getUsername(), bio);
+        return WebResponse.<String>builder().data("Bio updated successfully").build();
+    }
+
 }

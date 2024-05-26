@@ -9,4 +9,6 @@ public interface UserService {
     void changeUserPassword(User user, String newPassword);
     void reduceBalance(String email, Integer newBalance);
     void changeUserRole(String email, Status newRole);
+    void updateProfileUrl(String email, String profileUrl);
+    void updateBio(String email, String bio);    
 }

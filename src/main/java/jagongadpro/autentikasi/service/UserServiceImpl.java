@@ -88,4 +88,21 @@ public class UserServiceImpl implements UserService{
         Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), updatedAuthorities);
         SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
+
+    @Override
+    @Transactional
+    public void updateProfileUrl(String email, String profileUrl) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User tidak ditemukan"));
+        user.setProfileUrl(profileUrl);
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void updateBio(String email, String bio) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User tidak ditemukan"));
+        user.setBio(bio);
+        userRepository.save(user);
+    }
+
 }
