@@ -17,6 +17,7 @@ import java.util.List;
 @Table(name = "users")
 public class User implements UserDetails {
     @Getter
+    @Setter
     @Id
     String email;
 
