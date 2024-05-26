@@ -10,19 +10,19 @@ class UserResponseTest {
 
     @Test
     void getterEmail(){
-        assertEquals(userResponse.getEmail(), "abc@gmail.com");
+        assertEquals("abc@gmail.com", userResponse.getEmail());
     }
     @Test
     void getterUserName(){
-        assertEquals(userResponse.getUsername(), "username");
+        assertEquals("username", userResponse.getUsername());
     }
     @Test
     void getterSaldo(){
-        assertEquals(userResponse.getSaldo(), 10000);
+        assertEquals(10000, userResponse.getSaldo());
     }
     @Test
     void getterStatus(){
-        assertEquals(userResponse.getStatus(), Status.ROLE_PEMBELI);
+        assertEquals(Status.ROLE_PEMBELI, userResponse.getStatus());
     }
     @Test
     void toStringTest(){

@@ -6,14 +6,12 @@ import jagongadpro.autentikasi.model.UserNotFoundException;
 import jagongadpro.autentikasi.repository.PasswordResetTokenRepository;
 import jagongadpro.autentikasi.repository.UserRepository;
 import jagongadpro.autentikasi.enums.Status;
-import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -94,7 +92,7 @@ class UserServiceImplTest {
         userService.changeUserPassword(user, "newPassword");
         verify(userRepository,times(1)).save(any(User.class));
         assertNotNull(user.getPassword());
-        assertEquals(user.getPassword(), "encode");
+        assertEquals("encode", user.getPassword());
     }
 
     @Test
@@ -105,7 +103,7 @@ class UserServiceImplTest {
         userService.reduceBalance(email, 20000);
         verify(userRepository, times(1)).findByEmail(email);
         verify(userRepository, times(1)).save(user);
-        assertEquals(user.getSaldo(),20000);
+        assertEquals(20000, user.getSaldo());
     }
 
     @Test
@@ -129,10 +127,8 @@ class UserServiceImplTest {
         when(securityContext.getAuthentication()).thenReturn(auth);
         SecurityContextHolder.setContext(securityContext);
 
-        // Act
         userService.changeUserRole("test@example.com", Status.ROLE_PENJUAL);
 
-        // Assert
         assertEquals(Status.ROLE_PENJUAL, existingUser.getStatus());
 
 

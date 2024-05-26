@@ -15,7 +15,7 @@ import jagongadpro.autentikasi.service.JwtService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
+
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -70,8 +70,7 @@ class AuthenticationControllerTest {
 
     @Test
     void LoginFailedBadCredentials() throws  Exception {
-        User user = new User.Builder().email("abc@gmail.com").password("password").saldo(90000).build();
-        LoginUserRequest request = new LoginUserRequest("abc@gmail.com", "password");
+       LoginUserRequest request = new LoginUserRequest("abc@gmail.com", "password");
         when(authenticationService.authenticate(any(LoginUserRequest.class))).thenThrow(new BadCredentialsException("Email atau password salah"));
         mockMvc.perform(post("/api/auth/login").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
                 .andExpectAll(status().isUnauthorized())
@@ -79,13 +78,12 @@ class AuthenticationControllerTest {
                     WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<WebResponse<String>>() {
                     });
                     assertNotNull(response.getErrors());
-                    assertEquals(response.getErrors(),"Email atau password salah");
+                    assertEquals("Email atau password salah", response.getErrors());
                 });
     }
 
     @Test
     void LoginFailedInputNotValid() throws  Exception {
-        User user = new User.Builder().email("abc@gmail.com").password("password").saldo(90000).build();
         LoginUserRequest request = new LoginUserRequest("abc@gmail.com","");
         mockMvc.perform(post("/api/auth/login").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
                 .andExpectAll(status().isBadRequest())
