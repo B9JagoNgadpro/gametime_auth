@@ -23,6 +23,10 @@ class UserFacadeTest {
     @InjectMocks
     UserFacade userFacade;
     @Mock
+    ValidationService validationService;
+    @Mock
+    EmailServiceImpl emailServiceImpl;
+    @Mock
     UserService userService;
     @Mock
     PasswordResetTokenServiceImpl passwordResetTokenService;
