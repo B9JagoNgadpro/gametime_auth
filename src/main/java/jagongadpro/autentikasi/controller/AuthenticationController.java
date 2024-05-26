@@ -55,6 +55,7 @@ public class AuthenticationController {
     public ResponseEntity<User> register(@RequestBody RegisterUserRequest registerUserDto) {
         User registeredUser = authenticationService.signup(registerUserDto);
 
+        //untuk membuat keranjang secara otomatis
         String email = registeredUser.getEmail();
         String apiUrl = "http://35.213.132.17/api/cart/create/" + email;
         restTemplate.postForEntity(apiUrl, null, String.class);
