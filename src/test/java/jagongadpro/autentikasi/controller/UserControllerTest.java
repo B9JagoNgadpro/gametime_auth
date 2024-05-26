@@ -8,14 +8,12 @@ import jagongadpro.autentikasi.dto.WebResponse;
 import jagongadpro.autentikasi.enums.Status;
 import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.model.UserNotFoundException;
-import jagongadpro.autentikasi.service.PasswordResetTokenServiceImpl;
+
 import jagongadpro.autentikasi.service.UserFacade;
 import jagongadpro.autentikasi.service.UserService;
-import jagongadpro.autentikasi.service.ValidationService;
+
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.ValidationException;
-import org.apache.coyote.Response;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,12 +25,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,6 +43,8 @@ import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 import org.springframework.security.test.context.support.WithMockUser;
 
 
@@ -53,8 +52,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
-    @InjectMocks
-    UserController userController;
     @MockBean
     UserFacade userFacade;
     @Autowired
@@ -70,10 +67,8 @@ public class UserControllerTest {
     ObjectMapper objectMapper;
 
     @Test
-    public void testResetPassword() throws Exception {
+       void testResetPassword() throws Exception {
         String email = "test@example.com";
-        String token = UUID.randomUUID().toString();
-        User user = new User.Builder().email(email).username("username").bio("bio").password("password").profileUrl("url").saldo(500000).build();
         WebResponse<String> responseMock = WebResponse.<String>builder().data("url sent").build();
         when(userFacade.resetPassword(any(HttpServletRequest.class), eq(email))).thenReturn(responseMock);
         mockMvc.perform(post("/user/password/resetPassword")
@@ -82,16 +77,13 @@ public class UserControllerTest {
                 .andDo(result -> {
                     WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<WebResponse<String>>() {
                     });
-                    assertEquals(response.getData(), "url sent" );
+                    assertEquals("url sent", response.getData() );
                 });
 
     }
     @Test
-    public void testResetPasswordUserNotFound() throws Exception {
+       void testResetPasswordUserNotFound() throws Exception {
         String email = "test@example.com";
-        String token = UUID.randomUUID().toString();
-        User user = new User.Builder().email(email).username("username").bio("bio").password("password").profileUrl("url").saldo(500000).build();
-        WebResponse<String> responseMock = WebResponse.<String>builder().data("url sent").build();
         when(userFacade.resetPassword(any(HttpServletRequest.class), eq(email))).thenThrow(new UserNotFoundException("Email tidak ditemukan"));
         mockMvc.perform(post("/user/password/resetPassword")
                         .param("email", email))
@@ -100,13 +92,13 @@ public class UserControllerTest {
                     WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<WebResponse<String>>() {
                     });
                     assertNotNull(response.getErrors());
-                    assertEquals(response.getErrors(),"Email tidak ditemukan");
+                    assertEquals("Email tidak ditemukan", response.getErrors());
                 });
 
     }
 
     @Test
-    public void showChangePasswordPageTestSuccess() throws  Exception{
+       void showChangePasswordPageTestSuccess() throws  Exception{
         String token="token";
         ResponseEntity<String> responseEntity = ResponseEntity.ok().body("valid");
         when(userFacade.showChangePasswordPage(token)).thenReturn(responseEntity) ;
@@ -114,29 +106,28 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andDo(result ->{
                     String response = result.getResponse().getContentAsString();
-                    assertEquals(response, "valid");
+                    assertEquals("valid", response);
                 } );
 
     }
 
 
     @Test
-    public void savePasswordSuccess() throws Exception{
-        User user = new User();
+       void savePasswordSuccess() throws Exception{
         WebResponse<String> responseMock = WebResponse.<String>builder().data("password berhasil diganti").build();
         PasswordDto passwordDto = new PasswordDto("token", "newPassword");
         when(userFacade.savePassword(any(PasswordDto.class))).thenReturn(responseMock) ;
         mockMvc.perform(post("/user/password/savePassword").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(passwordDto))).andExpect(status().isOk())
                 .andDo(result -> {
-                   WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
-                   });
-                   assertEquals(response.getData(), "password berhasil diganti");
+                    WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+                    });
+                    assertEquals("password berhasil diganti", response.getData());
                 });
     }
 
     @Test
     @WithMockUser(username = "testuser", authorities = {"ROLE_PEMBELI"})
-    public void testGetUserLoggedIn() throws Exception{
+       void testGetUserLoggedIn() throws Exception{
         when(userService.findByEmail("testuser")).thenReturn(new User.Builder().email("testuser").status(Status.ROLE_PEMBELI).build());
         mockMvc.perform(get("/user/me").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andDo(result -> {
@@ -150,32 +141,32 @@ public class UserControllerTest {
                 });
     }
     @Test
-    public void testGetUserNotLoggedIn() throws Exception{
+       void testGetUserNotLoggedIn() throws Exception{
         mockMvc.perform(get("/user/me").contentType(MediaType.APPLICATION_JSON)).andExpect(status().is4xxClientError());
 
     }
     @Test
     @WithMockUser(username = "testuser", authorities = {"ROLE_PEMBELI"})
-    public void testUpdateUserBalance() throws Exception{
+       void testUpdateUserBalance() throws Exception{
         Map<String,Integer> request = new HashMap<>();
         request.put("saldo", 20000);
         mockMvc.perform(patch("/user/reduceBalance").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andExpect(status().isOk())
                 .andDo(result -> {
                     WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>(){});
-                    assertEquals(response.getData(),"Ok");
+                    assertEquals("Ok", response.getData());
                     assertNull(response.getErrors());
                 });
 
     }
     @Test
-    public void testSetUserBalanceNotLoggedIn() throws Exception{
+       void testSetUserBalanceNotLoggedIn() throws Exception{
         mockMvc.perform(patch("/user/reduceBalance").contentType(MediaType.APPLICATION_JSON)).andExpect(status().is4xxClientError());
 
     }
 
     @Test
     @WithMockUser(username = "testuser", authorities = {"ROLE_PEMBELI"})
-    public void testSetUserBalanceNotValid() throws Exception{
+       void testSetUserBalanceNotValid() throws Exception{
         Map<String,Integer> request = new HashMap<>();
         request.put("saldo", -1);
         mockMvc.perform(patch("/user/reduceBalance").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andExpect(status().isBadRequest())
@@ -183,9 +174,29 @@ public class UserControllerTest {
                     WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>(){});
                     assertNull(response.getData());
                     assertNotNull(response.getErrors());
-                    assertEquals(response.getErrors(), "Saldo tidak valid");
+                    assertEquals("Saldo tidak valid", response.getErrors());
                 });
     }
 
 
+
+
+    @Test
+    @WithMockUser(username = "user1@example.com", authorities = {"ROLE_PEMBELI"})
+       void testChangeUserRole() throws Exception {
+        String newRole = "ROLE_PENJUAL";
+
+        mockMvc.perform(post("/api/user/changeRole")
+                        .param("newRole", newRole)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(result -> {
+                    WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<WebResponse<String>>() {
+                    });
+                    assertEquals("Role updated successfully", response.getData());
+                    assertNull(response.getErrors());
+                });
+
+        verify(userService, times(1)).changeUserRole("user1@example.com", Status.valueOf(newRole));
+    }
 }

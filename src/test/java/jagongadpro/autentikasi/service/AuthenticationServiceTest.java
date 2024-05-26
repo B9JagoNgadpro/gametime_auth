@@ -3,13 +3,12 @@ package jagongadpro.autentikasi.service;
 import jagongadpro.autentikasi.dto.LoginUserRequest;
 import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,10 +21,6 @@ class AuthenticationServiceTest {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @BeforeEach
-    void setUp(){
-        userRepository.deleteAll();
-    }
 
     @Test
     void AuthenticateSuccess(){
@@ -34,6 +29,7 @@ class AuthenticationServiceTest {
         LoginUserRequest request = new LoginUserRequest("hai@gmail.com", "password");
         User login = authenticationService.authenticate(request);
         assertEquals(login.getEmail(), user.getEmail() );
+        userRepository.deleteById("hai@gmail.com");
     }
 
     @Test
@@ -44,6 +40,7 @@ class AuthenticationServiceTest {
         assertThrows(BadCredentialsException.class, () -> {
             authenticationService.authenticate(request);
         });
+        userRepository.deleteById("hai@gmail.com");
     }
 
     @Test
@@ -54,5 +51,6 @@ class AuthenticationServiceTest {
         assertThrows(BadCredentialsException.class, () -> {
             authenticationService.authenticate(request);
         });
+        userRepository.deleteById("hai@gmail.com");
     }
 }

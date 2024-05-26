@@ -22,7 +22,7 @@ public class EmailServiceImplTest {
     private EmailServiceImpl emailService;
 
     @Test
-    public void testConstructResetTokenEmail() {
+    void testConstructResetTokenEmail() {
         String contextPath = "http://example.com";
         String token = "myToken";
         User user = new User.Builder().email("test@example.com").build();
@@ -32,7 +32,7 @@ public class EmailServiceImplTest {
     }
 
     @Test
-    public void testConstructEmail() {
+    void testConstructEmail() {
         String subject = "Test Subject";
         String body = "Test Body";
         User user = new User.Builder().email("abc@gmail.com").build();

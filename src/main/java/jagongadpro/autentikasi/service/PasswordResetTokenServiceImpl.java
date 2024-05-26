@@ -13,7 +13,7 @@ public class PasswordResetTokenServiceImpl {
     @Autowired
     PasswordResetTokenRepository passwordResetTokenRepository;
 
-    public String validatePasswordResetToken(String token) {;
+    public String validatePasswordResetToken(String token) {
         PasswordResetToken passToken = passwordResetTokenRepository.findByToken(token).orElse(null);
         if (!isTokenFound(passToken) || isTokenExpired(passToken)){
             return "invalid";

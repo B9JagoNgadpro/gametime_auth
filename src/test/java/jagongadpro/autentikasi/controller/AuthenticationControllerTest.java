@@ -2,26 +2,20 @@ package jagongadpro.autentikasi.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
+
 import jagongadpro.autentikasi.dto.LoginResponse;
 import jagongadpro.autentikasi.dto.LoginUserRequest;
 import jagongadpro.autentikasi.dto.WebResponse;
-import jagongadpro.autentikasi.enums.Status;
+
 import jagongadpro.autentikasi.model.User;
-import jagongadpro.autentikasi.repository.UserRepository;
+
 import jagongadpro.autentikasi.service.AuthenticationService;
 import jagongadpro.autentikasi.service.EmailServiceImpl;
 import jagongadpro.autentikasi.service.JwtService;
-import jagongadpro.autentikasi.service.ValidationService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
+
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,15 +23,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -80,8 +70,7 @@ class AuthenticationControllerTest {
 
     @Test
     void LoginFailedBadCredentials() throws  Exception {
-        User user = new User.Builder().email("abc@gmail.com").password("password").saldo(90000).build();
-        LoginUserRequest request = new LoginUserRequest("abc@gmail.com", "password");
+       LoginUserRequest request = new LoginUserRequest("abc@gmail.com", "password");
         when(authenticationService.authenticate(any(LoginUserRequest.class))).thenThrow(new BadCredentialsException("Email atau password salah"));
         mockMvc.perform(post("/api/auth/login").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
                 .andExpectAll(status().isUnauthorized())
@@ -89,13 +78,12 @@ class AuthenticationControllerTest {
                     WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<WebResponse<String>>() {
                     });
                     assertNotNull(response.getErrors());
-                    assertEquals(response.getErrors(),"Email atau password salah");
+                    assertEquals("Email atau password salah", response.getErrors());
                 });
     }
 
     @Test
     void LoginFailedInputNotValid() throws  Exception {
-        User user = new User.Builder().email("abc@gmail.com").password("password").saldo(90000).build();
         LoginUserRequest request = new LoginUserRequest("abc@gmail.com","");
         mockMvc.perform(post("/api/auth/login").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
                 .andExpectAll(status().isBadRequest())

@@ -20,18 +20,18 @@ public class ErrorController {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<WebResponse<String>> BadCredentialException(BadCredentialsException exception) {
+    public ResponseEntity<WebResponse<String>> badCredentialException(BadCredentialsException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(WebResponse.<String>builder().errors("Email atau password salah").build());
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<WebResponse<String>> UsernameNotFoundException(UserNotFoundException exception) {
+    public ResponseEntity<WebResponse<String>> usernameNotFoundException(UserNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(WebResponse.<String>builder().errors(exception.getMessage()).build());
     }
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<WebResponse<String>> ResponseStatusException(ResponseStatusException exception) {
+    public ResponseEntity<WebResponse<String>> responseStatusException(ResponseStatusException exception) {
         return ResponseEntity.status(exception.getStatusCode())
                 .body(WebResponse.<String>builder().errors(exception.getReason()).build());
     }
