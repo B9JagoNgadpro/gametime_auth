@@ -3,9 +3,7 @@ package jagongadpro.autentikasi.controller;
 import jagongadpro.autentikasi.dto.PasswordDto;
 import jagongadpro.autentikasi.dto.UserResponse;
 import jagongadpro.autentikasi.dto.WebResponse;
-import jagongadpro.autentikasi.model.PasswordResetToken;
 import jagongadpro.autentikasi.model.User;
-import jagongadpro.autentikasi.model.UserNotFoundException;
 import jagongadpro.autentikasi.service.*;
 import jagongadpro.autentikasi.enums.Status;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,14 +17,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
-import java.util.UUID;
+
 
 @RestController
 public class UserController {

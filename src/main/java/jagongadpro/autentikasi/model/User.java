@@ -135,8 +135,8 @@ public class User implements UserDetails {
             return this;
         }
         public User build() {
-            User user=  new User(this);
-            return user;
+            return  new User(this);
+
         }
 
 

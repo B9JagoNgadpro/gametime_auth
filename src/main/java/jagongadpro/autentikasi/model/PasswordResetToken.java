@@ -35,7 +35,6 @@ public class PasswordResetToken {
     @Setter
     @Getter
     private Date expiryDate =  calculateExpiryDate(EXPIRATION);
-    ;
 
     public PasswordResetToken(String token, User user){
         this.token = token;

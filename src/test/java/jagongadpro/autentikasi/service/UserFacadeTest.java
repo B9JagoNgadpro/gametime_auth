@@ -2,7 +2,6 @@ package jagongadpro.autentikasi.service;
 
 import jagongadpro.autentikasi.dto.PasswordDto;
 import jagongadpro.autentikasi.dto.WebResponse;
-import jagongadpro.autentikasi.model.PasswordResetToken;
 import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.model.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,7 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,10 +25,6 @@ class UserFacadeTest {
     @Mock
     UserService userService;
     @Mock
-    ValidationService validationService;
-    @Mock
-    EmailServiceImpl emailServiceImpl;
-    @Mock
     PasswordResetTokenServiceImpl passwordResetTokenService;
 
     @Test
@@ -39,7 +34,7 @@ class UserFacadeTest {
         when(userService.findByEmail(email)).thenReturn(user);
         HttpServletRequest request = mock(HttpServletRequest.class);
         WebResponse<String> response = userFacade.resetPassword(request, email);
-        assertEquals(response.getData(), "url sent");
+        assertEquals("url sent", response.getData());
     }
 
     @Test
@@ -64,7 +59,7 @@ class UserFacadeTest {
         String token = "token";
         when(passwordResetTokenService.validatePasswordResetToken(token)).thenReturn("invalid");
         ResponseEntity<String> response = userFacade.showChangePasswordPage(token);
-        assertEquals(response.getBody(),"invalid");
+        assertEquals("invalid", response.getBody());
     }
 
     @Test
@@ -75,14 +70,13 @@ class UserFacadeTest {
         when(passwordResetTokenService.validatePasswordResetToken(token)).thenReturn("valid");
         when(passwordResetTokenService.getUserByPasswordResetToken(token)).thenReturn(user);
         WebResponse<String> response = userFacade.savePassword(passwordDto);
-        assertEquals(response.getData(), "password berhasil diganti");
+        assertEquals("password berhasil diganti" , response.getData());
 
     }
 
     @Test
     void savePasswordValidatePasswordFailed(){
         String token = "token";
-        User user = new User();
         PasswordDto passwordDto = new PasswordDto(token, "new-Password");
         when(passwordResetTokenService.validatePasswordResetToken(token)).thenReturn("invalid");
         assertThrows(ResponseStatusException.class, ()-> userFacade.savePassword(passwordDto));
@@ -90,7 +84,6 @@ class UserFacadeTest {
     @Test
     void savePasswordFailedUserNotFound(){
         String token = "token";
-        User user = new User();
         PasswordDto passwordDto = new PasswordDto(token, "new-Password");
         when(passwordResetTokenService.validatePasswordResetToken(token)).thenReturn("valid");
         when(passwordResetTokenService.getUserByPasswordResetToken(token)).thenReturn(null);

@@ -91,7 +91,7 @@ class UserServiceImplTest {
         userService.changeUserPassword(user, "newPassword");
         verify(userRepository,times(1)).save(any(User.class));
         assertNotNull(user.getPassword());
-        assertEquals(user.getPassword(), "encode");
+        assertEquals("encode", user.getPassword());
     }
 
     @Test
@@ -102,7 +102,7 @@ class UserServiceImplTest {
         userService.reduceBalance(email, 20000);
         verify(userRepository, times(1)).findByEmail(email);
         verify(userRepository, times(1)).save(user);
-        assertEquals(user.getSaldo(),20000);
+        assertEquals(20000, user.getSaldo());
     }
 
     @Test
@@ -126,10 +126,8 @@ class UserServiceImplTest {
         when(securityContext.getAuthentication()).thenReturn(auth);
         SecurityContextHolder.setContext(securityContext);
 
-        // Act
         userService.changeUserRole("test@example.com", Status.ROLE_PENJUAL);
 
-        // Assert
         assertEquals(Status.ROLE_PENJUAL, existingUser.getStatus());
     }
 
