@@ -103,7 +103,7 @@ public class User implements UserDetails {
 
         String password;
         String profileUrl;
-        Integer saldo;
+        Integer saldo = 0;
         String bio;
         Status status = Status.ROLE_PEMBELI;
 
