@@ -6,14 +6,11 @@ import jagongadpro.autentikasi.model.UserNotFoundException;
 import jagongadpro.autentikasi.repository.PasswordResetTokenRepository;
 import jagongadpro.autentikasi.repository.UserRepository;
 import jagongadpro.autentikasi.enums.Status;
-import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -134,8 +131,6 @@ class UserServiceImplTest {
 
         // Assert
         assertEquals(Status.ROLE_PENJUAL, existingUser.getStatus());
-
-
     }
 
     @Test
@@ -153,5 +148,47 @@ class UserServiceImplTest {
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class, () -> userService.changeUserRole(email, Status.ROLE_PENJUAL));
+    }
+
+    @Test
+    void updateProfileUrlSuccess() {
+        String email = "abc@gmail.com";
+        User user = new User.Builder().email(email).profileUrl("oldUrl").build();
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+        userService.updateProfileUrl(email, "newUrl");
+
+        verify(userRepository, times(1)).findByEmail(email);
+        verify(userRepository, times(1)).save(user);
+        assertEquals(user.getProfileUrl(), "newUrl");
+    }
+
+    @Test
+    void updateProfileUrlUserNotFound() {
+        String email = "abc@gmail.com";
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> userService.updateProfileUrl(email, "newUrl"));
+    }
+
+    @Test
+    void updateBioSuccess() {
+        String email = "abc@gmail.com";
+        User user = new User.Builder().email(email).bio("oldBio").build();
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+        userService.updateBio(email, "newBio");
+
+        verify(userRepository, times(1)).findByEmail(email);
+        verify(userRepository, times(1)).save(user);
+        assertEquals(user.getBio(), "newBio");
+    }
+
+    @Test
+    void updateBioUserNotFound() {
+        String email = "abc@gmail.com";
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> userService.updateBio(email, "newBio"));
     }
 }
