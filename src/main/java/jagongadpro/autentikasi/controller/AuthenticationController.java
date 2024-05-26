@@ -50,7 +50,7 @@ public class AuthenticationController {
 
     }
 
-    @PostMapping("/api/auth/signup")
+    @PostMapping("signup")
     public ResponseEntity<User> register(@RequestBody RegisterUserRequest registerUserDto) {
         User registeredUser = authenticationService.signup(registerUserDto);
 
