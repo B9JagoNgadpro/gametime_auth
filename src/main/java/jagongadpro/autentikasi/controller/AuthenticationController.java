@@ -2,6 +2,7 @@ package jagongadpro.autentikasi.controller;
 
 import jagongadpro.autentikasi.dto.LoginResponse;
 import jagongadpro.autentikasi.dto.LoginUserRequest;
+import jagongadpro.autentikasi.dto.RegisterUserRequest;
 import jagongadpro.autentikasi.dto.WebResponse;
 import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.service.AuthenticationService;
@@ -12,6 +13,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -43,5 +48,12 @@ public class AuthenticationController {
 
         return WebResponse.<LoginResponse>builder().data(loginResponse).build();
 
+    }
+
+    @PostMapping("/api/auth/signup")
+    public ResponseEntity<User> register(@RequestBody RegisterUserRequest registerUserDto) {
+        User registeredUser = authenticationService.signup(registerUserDto);
+
+        return ResponseEntity.ok(registeredUser);
     }
 }

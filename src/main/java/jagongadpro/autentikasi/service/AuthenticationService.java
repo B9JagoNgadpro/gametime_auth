@@ -1,6 +1,7 @@
 package jagongadpro.autentikasi.service;
 
 import jagongadpro.autentikasi.dto.LoginUserRequest;
+import jagongadpro.autentikasi.dto.RegisterUserRequest;
 import jagongadpro.autentikasi.model.User;
 import jagongadpro.autentikasi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,15 @@ public class AuthenticationService {
     PasswordEncoder passwordEncoder;
     @Autowired
     AuthenticationManager authenticationManager;
+
+    public User signup(RegisterUserRequest input) {
+        User user = new User.Builder()
+                .email(input.getEmail())
+                .password(passwordEncoder.encode(input.getPassword()))
+                .build();
+
+        return userRepository.save(user);
+    }
 
     //kalau salah jadi Bad Credemtials
     public User authenticate(LoginUserRequest input) {
