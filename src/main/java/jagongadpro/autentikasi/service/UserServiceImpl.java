@@ -6,6 +6,7 @@ import jagongadpro.autentikasi.model.UserNotFoundException;
 import jagongadpro.autentikasi.enums.Status;
 import jagongadpro.autentikasi.repository.PasswordResetTokenRepository;
 import jagongadpro.autentikasi.repository.UserRepository;
+import jakarta.validation.OverridesAttribute;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -73,6 +74,14 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
+    public void addBalance(String email,  Integer newBalance) {
+        User user =userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("User tidak ditemukan"));
+        user.setSaldo(user.getSaldo() + newBalance);
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
     public void changeUserRole(String email, Status newRole) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
         if (user.getStatus().equals(newRole)) {
@@ -88,4 +97,21 @@ public class UserServiceImpl implements UserService{
         Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), updatedAuthorities);
         SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
+
+    @Override
+    @Transactional
+    public void updateProfileUrl(String email, String profileUrl) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User tidak ditemukan"));
+        user.setProfileUrl(profileUrl);
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void updateBio(String email, String bio) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User tidak ditemukan"));
+        user.setBio(bio);
+        userRepository.save(user);
+    }
+
 }

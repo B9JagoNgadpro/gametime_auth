@@ -10,11 +10,11 @@ class PasswordDtoTest {
     @Test
     void testGetterSetterToken(){
         passwordDto.setToken("token");
-        assertEquals(passwordDto.getToken(), "token");
+        assertEquals("token", passwordDto.getToken());
     }
     @Test
     void testGetterSetterPassword(){
         passwordDto.setNewPassword("newPassword");
-        assertEquals(passwordDto.getNewPassword(), "newPassword");
+        assertEquals("newPassword", passwordDto.getNewPassword());
     }
 }

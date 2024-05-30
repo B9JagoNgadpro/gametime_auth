@@ -9,12 +9,12 @@ class LoginResponseTest {
     @Test
     void SetterGetterTokenTest(){
         loginResponse.setToken("token");
-        assertEquals(loginResponse.getToken(), "token");
+        assertEquals("token", loginResponse.getToken());
     }
     @Test
     void SetterGetterExpiredTest(){
         loginResponse.setExpiredIn(3000l);
-        assertEquals(loginResponse.getExpiredIn(), 3000l);
+        assertEquals(3000l, loginResponse.getExpiredIn());
     }
 
 

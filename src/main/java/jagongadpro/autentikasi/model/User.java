@@ -21,6 +21,7 @@ import java.util.List;
 @Table(name = "users")
 public class User implements UserDetails {
     @Getter
+    @Setter
     @Id
     String email;
 
@@ -102,7 +103,7 @@ public class User implements UserDetails {
 
         String password;
         String profileUrl;
-        Integer saldo;
+        Integer saldo = 0;
         String bio;
         Status status = Status.ROLE_PEMBELI;
 
@@ -135,8 +136,8 @@ public class User implements UserDetails {
             return this;
         }
         public User build() {
-            User user=  new User(this);
-            return user;
+            return  new User(this);
+
         }
 
 

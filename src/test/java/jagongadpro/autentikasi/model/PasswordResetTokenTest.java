@@ -2,7 +2,7 @@ package jagongadpro.autentikasi.model;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Calendar;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,7 +12,7 @@ class PasswordResetTokenTest {
     @Test
     void getterSetterToken(){
         passwordResetToken.setToken("token");
-        assertEquals(passwordResetToken.getToken(), "token");
+        assertEquals("token", passwordResetToken.getToken());
 
     }
 

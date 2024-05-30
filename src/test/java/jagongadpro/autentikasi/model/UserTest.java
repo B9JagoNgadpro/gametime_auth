@@ -54,32 +54,32 @@ public class UserTest {
     @Test
     void setBioTest(){
         user.setBio("baru");
-        assertEquals(user.getBio(), "baru");
+        assertEquals("baru", user.getBio());
     }
     @Test
     void setPasswordTest(){
         user.setPassword("pwbaru");
-        assertEquals(user.getPassword(), "pwbaru");
+        assertEquals("pwbaru", user.getPassword());
     }
     @Test
     void setStatusTest(){
         user.setStatus(Status.ROLE_PEMBELI);
-            assertEquals(user.getStatus(), Status.ROLE_PEMBELI);
+            assertEquals( Status.ROLE_PEMBELI, user.getStatus());
     }
     @Test
     void setSaldoTest(){
         user.setSaldo(40000);
-        assertEquals(user.getSaldo(), 40000);
+        assertEquals(40000, user.getSaldo());
     }
     @Test
     void setUserNameTest(){
         user.setUsername("usernamebaru");
-        assertEquals(user.getUsernameReal(), "usernamebaru");
+        assertEquals("usernamebaru", user.getUsernameReal());
     }
     @Test
     void setPasswordUrlTest(){
         user.setProfileUrl("urlbaru");
-        assertEquals(user.getProfileUrl(), "urlbaru");
+        assertEquals("urlbaru", user.getProfileUrl());
     }
 
 

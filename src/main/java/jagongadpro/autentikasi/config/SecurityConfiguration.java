@@ -64,11 +64,18 @@ public class SecurityConfiguration {
                 .requestMatchers("/penilaian-produk/edit/{idTanggapan}").hasAnyAuthority("ROLE_PENJUAL")
                 .requestMatchers("/penilaian-produk/delete/{idTanggapan}").hasAnyAuthority("ROLE_PENJUAL")
                 
+                .requestMatchers("/api/cart/add").hasAnyAuthority("ROLE_PEMBELI")
+                .requestMatchers("/api/cart/increment").hasAnyAuthority("ROLE_PEMBELI")
+                .requestMatchers("/api/cart/decrement").hasAnyAuthority("ROLE_PEMBELI")
+                .requestMatchers("/api/cart/remove").hasAnyAuthority("ROLE_PEMBELI")
+                .requestMatchers("/api/cart/update").hasAnyAuthority("ROLE_PEMBELI")
+                .requestMatchers("/api/cart/view/{email}").hasAnyAuthority("ROLE_PEMBELI")
+                .requestMatchers("/api/cart/clear/{email}").hasAnyAuthority("ROLE_PEMBELI")
+
                 .requestMatchers("/api/games/search").permitAll()
                 .requestMatchers("/api/games/filter").permitAll()
                 .requestMatchers("/api/games/{id}").permitAll()
                 .requestMatchers("/user/password/**").permitAll()
-                .requestMatchers("/api/cart/**").hasAnyAuthority("ROLE_PEMBELI")
                 .requestMatchers("/api/user/password/**").permitAll()
                 .requestMatchers("/api/user/me").hasAnyAuthority("ROLE_PEMBELI", "ROLE_PENJUAL")
                 .requestMatchers("/api/user/reduceBalance").hasAnyAuthority("ROLE_PEMBELI")
@@ -84,19 +91,6 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOriginPatterns(List.of("*"));
-//        configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
-//        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//
-//        source.registerCorsConfiguration("/**",configuration);
-//
-//        return source;
-//    }
 
 
 }

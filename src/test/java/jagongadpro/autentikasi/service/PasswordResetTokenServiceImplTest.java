@@ -8,7 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
+
 
 import java.util.Calendar;
 import java.util.Date;
@@ -32,7 +32,7 @@ class PasswordResetTokenServiceImplTest {
         PasswordResetToken passwordResetToken = new PasswordResetToken("token", user);
         when(passwordResetTokenRepository.findByToken("token")).thenReturn(Optional.of(passwordResetToken));
         String result = passwordResetTokenService.validatePasswordResetToken("token");
-        assertEquals(result, "valid");
+        assertEquals("valid", result);
 
     }
 
@@ -41,7 +41,7 @@ class PasswordResetTokenServiceImplTest {
         String token = "token";
         when(passwordResetTokenRepository.findByToken(token)).thenReturn(Optional.empty());
         String result = passwordResetTokenService.validatePasswordResetToken(token);
-        assertEquals(result, "invalid");
+        assertEquals("invalid", result);
 
     }
 
@@ -57,7 +57,7 @@ class PasswordResetTokenServiceImplTest {
         passwordResetToken.setExpiryDate(expiryDate);
         when(passwordResetTokenRepository.findByToken("token")).thenReturn(Optional.of(passwordResetToken));
         String result = passwordResetTokenService.validatePasswordResetToken(token);
-        assertEquals(result, "invalid");
+        assertEquals("invalid" , result);
 
     }
 
@@ -68,6 +68,6 @@ class PasswordResetTokenServiceImplTest {
         PasswordResetToken passwordResetToken = new PasswordResetToken("token", user);
         when(passwordResetTokenRepository.findByToken("token")).thenReturn(Optional.of(passwordResetToken));
         User getUser = passwordResetTokenService.getUserByPasswordResetToken("token");
-        assertEquals(getUser.getUsernameReal(), "abc");
+        assertEquals("abc", getUser.getUsernameReal());
     }
 }
