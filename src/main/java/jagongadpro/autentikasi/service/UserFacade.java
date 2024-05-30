@@ -55,7 +55,7 @@ public class UserFacade {
             //valid nanti return ke halaman forget pw
         } else {
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Location", "http://localhost:3000/changePassword?token="+token);
+            headers.add("Location", "http://gametime-frontend.vercel.app/changePassword?token="+token);
             return new ResponseEntity<>(headers, HttpStatus.FOUND);
         }
     }
